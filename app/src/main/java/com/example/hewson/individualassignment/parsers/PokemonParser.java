@@ -1,8 +1,7 @@
 package com.example.hewson.individualassignment.parsers;
 
-import com.example.hewson.individualassignment.Pokemon;
+import com.example.hewson.individualassignment.database.Pokemon;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,20 +14,33 @@ import java.util.List;
 
 public class PokemonParser {
     public static List<Pokemon> parseFeed(String content) {
+//        try {
+//            JSONArray myArray = new JSONArray(content);
+//            List<Pokemon> pokemonList = new ArrayList<>();
+//            for (int i = 0; i < myArray.length(); i++) {
+//                JSONObject object = myArray.getJSONObject(i);
+//                Pokemon pokemon = new Pokemon();
+//                pokemon.setName(object.getString("name"));
+//                pokemon.setType(object.getString("types"));
+//                pokemonList.add(pokemon);
+//            }
+//            return pokemonList;
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
         try {
-            JSONArray myArray = new JSONArray(content);
+            JSONObject object = new JSONObject(content);
             List<Pokemon> pokemonList = new ArrayList<>();
-            for (int i = 0; i < myArray.length(); i++) {
-                JSONObject object = myArray.getJSONObject(i);
-                Pokemon pokemon = new Pokemon();
-                pokemon.setName(object.getString("name"));
-                pokemon.setType(object.getString("type"));
-                pokemonList.add(pokemon);
-            }
+            Pokemon pokemon = new Pokemon();
+            pokemon.setName(object.getString("name"));
+            pokemonList.add(pokemon);
             return pokemonList;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
+
+
     }
 }

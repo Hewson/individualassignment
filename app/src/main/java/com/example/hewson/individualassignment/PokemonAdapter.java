@@ -6,12 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.example.hewson.individualassignment.database.Pokemon;
+
 import java.util.List;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by Hewson Tran on 24/09/2016.
