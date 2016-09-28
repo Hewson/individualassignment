@@ -15,17 +15,21 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hewson.individualassignment.database.Pokemon;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     private List<Pokemon> myPokemonList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -49,68 +53,120 @@ public class MainActivity extends AppCompatActivity{
         // specify an adapter (see also next example)
         mRecyclerView.addItemDecoration(new PokemonDivider(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
-        for (int i = 1; i < 20; i++) {
-            requestPokemon("http://pokeapi.co/api/v2/pokemon/" + i + "/");
+        if (isOnline()) {
+            System.out.println("i'm here");
+            testPokemon();
+            System.out.println("i'm also here");
         }
-//        updateDisplay();
-//        if (isOnline()) {
-//            requestPokemon("http://pokeapi.co/api/v2/pokemon/1/");
-//        }
     }
 
     protected void updateDisplay() {
         mAdapter.notifyDataSetChanged();
     }
 
-    protected void requestPokemon(String uri) {
-//        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET,
-//                uri, JSONObject,
-//                new Response.Listener<JSONObject>() {
+    protected void testPokemon() {
+        String url = "https://pokeapi.co/api/v2/pokemon/";
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                url, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("something", response.toString());
+
+                try {
+                    // Parsing json object response
+                    // response will be a json object
+                    String name = response.getString("count");
+                    JSONArray myArray = response.getJSONArray("results");
+                    Log.d("something", "onResponse: " + myArray.toString());
+                    for (int i = 0; i < myArray.length(); i++) {
+                        JSONObject pokemon = (JSONObject) myArray.get(i);
+                        String pokeName = pokemon.getString("name");
+                    }
+
+//                    JSONObject phone = response.getJSONObject("phone");
+//                    String home = phone.getString("home");
+//                    String mobile = phone.getString("mobile");
+
+                        System.out.println("something");
+
+                }
+                    catch(JSONException e){
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(),
+                                "Error: " + e.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            ,new Response.ErrorListener()
+
+            {
+
+                @Override
+                public void onErrorResponse (VolleyError error){
+                VolleyLog.d("something", "Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            }
+
+            );
+//        JsonObjectRequest jsonRequest = new JsonObjectRequest
+//                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 //                    @Override
 //                    public void onResponse(JSONObject response) {
+//                        System.out.println(response);
 //                        try {
-//                            myPokemonList = PokemonParser.parseFeed(response.getJSONArray("name"));
-//                            updateDisplay();
-//
+//                            response = response.getJSONObject("args");
+//                            String site = response.getString("site"),
+//                                    network = response.getString("network");
+//                            System.out.println("Site: "+site+"\nNetwork: "+network);
 //                        } catch (JSONException e) {
 //                            e.printStackTrace();
 //                        }
 //                    }
-//                },
-//                new Response.ErrorListener() {
+//                }, new Response.ErrorListener() {
+//
 //                    @Override
-//                    public void onErrorResponse(VolleyError e) {
-//                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    public void onErrorResponse(VolleyError error) {
+//                        error.printStackTrace();
 //                    }
 //                });
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, uri,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject object = new JSONObject(response);
-                            Pokemon pokemon = new Pokemon();
-                            pokemon.setName(object.getString("name"));
-                            pokemon.setType("something");
-                            Log.d("DEEBUG", "onResponse: " + object.getString("name"));
-                            myPokemonList.add(pokemon);
-                            updateDisplay();
-//                          myPokemonList = PokemonParser.parseFeed(response);
-//                            updateDisplay();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Log.d("DEEBUG", "onResponse: " + e.getMessage());
-                        }
-                    }
-                }, new Response.ErrorListener() {
+
+            Volley.newRequestQueue(this).
+
+            add(jsonObjReq);
+        }
+
+    protected void requestPokemon() {
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                "http://pokeapi.co/api/v2/pokemon/", null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                System.out.println("got here");
+                Log.d("Something", response.toString());
+                try {
+                    Log.d("something", "onResponse: " + response.getJSONObject("results"));
+//                            response = response.getJSONObject("count");
+                    Log.d("DEEBUG", "onResponse: " + response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("DEEBUG", "onResponse: " + e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError e) {
                 Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("something", "onErrorResponse: " + e.getMessage());
+                System.out.println("didn't get here");
             }
         });
         RequestQueue queue = Volley.newRequestQueue(this);
-        queue.add(stringRequest);
-        queue.start();
+        queue.add(jsonObjReq);
+        System.out.println("did you get here?");
     }
 
     protected boolean isOnline() {
