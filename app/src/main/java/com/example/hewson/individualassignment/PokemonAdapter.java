@@ -1,5 +1,6 @@
 package com.example.hewson.individualassignment;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.example.hewson.individualassignment.model.Pokemon;
 
 import java.util.List;
@@ -18,6 +20,13 @@ import java.util.List;
 
 public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHolder> {
     private List<Pokemon> myPokemonList;
+    private VolleySingleton volleySingleton;
+    private ImageLoader imageLoader;
+
+    public PokemonAdapter(Context context) {
+        this.volleySingleton = volleySingleton;
+        this.imageLoader = imageLoader;
+    }
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and

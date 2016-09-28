@@ -54,8 +54,9 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(new PokemonDivider(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         if (isOnline()) {
-            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=151");
+            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=5");
         }
+
     }
 
     protected void updateDisplay() {
@@ -63,8 +64,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void requestPokemonName(String url) {
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                url, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -72,12 +72,15 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < myArray.length(); i++) {
                         JSONObject pokemon = (JSONObject) myArray.get(i);
                         String pokeName = capitaliser(pokemon.getString("name"));
-                        Pokemon myPokemon = new Pokemon ();
+                        String pokeUrl = pokemon.getString("url");
+                        Pokemon myPokemon = new Pokemon();
                         myPokemon.setName(pokeName);
+                        myPokemon.setUrl(pokeUrl);
+                        myPokemon.setId(i + 1);
+                        Log.d("something", "onResponse: " + pokeUrl);
+                        requestPokemon(pokeUrl);
                         myPokemonList.add(myPokemon);
                         updateDisplay();
-
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -86,7 +89,40 @@ public class MainActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                 }
             }
-        }, new Response.ErrorListener(){
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("something", "Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        RequestQueue queue = VolleySingleton.getmInstance().getmRequestQueue();
+        queue.add(jsonObjReq);
+    }
+
+    protected void requestPokemon(String url) {
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject mySprite = response.getJSONObject("sprites");
+                    String iconUrl = mySprite.getString("front_default");
+                    Log.d("something", "onResponse: " + iconUrl);
+                    Pokemon myPokemon = new Pokemon();
+                    myPokemon.setIconUrl(iconUrl);
+                    myPokemonList.add(myPokemon);
+                    System.out.println(myPokemonList.toString());
+                    updateDisplay();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(),
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -101,35 +137,6 @@ public class MainActivity extends AppCompatActivity {
         queue.add(jsonObjReq);
     }
 
-    protected void requestPokemon() {
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                "http://pokeapi.co/api/v2/pokemon/", null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                System.out.println("got here");
-                Log.d("Something", response.toString());
-                try {
-                    Log.d("something", "onResponse: " + response.getJSONObject("results"));
-//                            response = response.getJSONObject("count");
-                    Log.d("DEEBUG", "onResponse: " + response);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.d("DEEBUG", "onResponse: " + e.getMessage());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError e) {
-                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.d("something", "onErrorResponse: " + e.getMessage());
-                System.out.println("didn't get here");
-            }
-        });
-        RequestQueue queue = Volley.newRequestQueue(this);
-        queue.add(jsonObjReq);
-        System.out.println("did you get here?");
-    }
-
     protected boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
@@ -140,8 +147,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String capitaliser(String word){
-
+    private String capitaliser(String word) {
         String[] words = word.split(" ");
         StringBuilder sb = new StringBuilder();
         if (words[0].length() > 0) {
@@ -151,8 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 sb.append(Character.toUpperCase(words[i].charAt(0)) + words[i].subSequence(1, words[i].length()).toString().toLowerCase());
             }
         }
-        return  sb.toString();
-
+        return sb.toString();
     }
 
 }

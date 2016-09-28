@@ -8,7 +8,15 @@ import android.graphics.Bitmap;
 
 public class Pokemon {
     private int id;
-    private String name, type, iconUrl;
+    private String name, type, iconUrl, url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public String getIconUrl() {
         return iconUrl;
@@ -36,8 +44,6 @@ public class Pokemon {
         this.icon = icon;
     }
 
-
-
     public Pokemon() {
     }
 
@@ -61,5 +67,17 @@ public class Pokemon {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "Pokemon{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", iconUrl='" + iconUrl + '\'' +
+                ", url='" + url + '\'' +
+                ", icon=" + icon +
+                '}';
     }
 }
