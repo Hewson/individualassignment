@@ -17,9 +17,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.hewson.individualassignment.database.Pokemon;
+import com.example.hewson.individualassignment.model.Pokemon;
 
 
 import org.json.JSONArray;
@@ -39,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler1);
         mAdapter = new PokemonAdapter(myPokemonList);
         // use this setting to improve performance if you know that changes
@@ -54,9 +54,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(new PokemonDivider(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         if (isOnline()) {
-            System.out.println("i'm here");
-            testPokemon();
-            System.out.println("i'm also here");
+            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=151");
         }
     }
 
@@ -64,81 +62,44 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
     }
 
-    protected void testPokemon() {
-        String url = "https://pokeapi.co/api/v2/pokemon/";
+    protected void requestPokemonName(String url) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 url, null, new Response.Listener<JSONObject>() {
-
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("something", response.toString());
-
                 try {
-                    // Parsing json object response
-                    // response will be a json object
-                    String name = response.getString("count");
                     JSONArray myArray = response.getJSONArray("results");
-                    Log.d("something", "onResponse: " + myArray.toString());
                     for (int i = 0; i < myArray.length(); i++) {
                         JSONObject pokemon = (JSONObject) myArray.get(i);
-                        String pokeName = pokemon.getString("name");
+                        String pokeName = capitaliser(pokemon.getString("name"));
+                        Pokemon myPokemon = new Pokemon ();
+                        myPokemon.setName(pokeName);
+                        myPokemonList.add(myPokemon);
+                        updateDisplay();
+
+
                     }
-
-//                    JSONObject phone = response.getJSONObject("phone");
-//                    String home = phone.getString("home");
-//                    String mobile = phone.getString("mobile");
-
-                        System.out.println("something");
-
-                }
-                    catch(JSONException e){
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(),
-                                "Error: " + e.getMessage(),
-                                Toast.LENGTH_LONG).show();
-                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(),
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
                 }
             }
+        }, new Response.ErrorListener(){
 
-            ,new Response.ErrorListener()
-
-            {
-
-                @Override
-                public void onErrorResponse (VolleyError error){
+            @Override
+            public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("something", "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_SHORT).show();
             }
-            }
-
-            );
-//        JsonObjectRequest jsonRequest = new JsonObjectRequest
-//                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        System.out.println(response);
-//                        try {
-//                            response = response.getJSONObject("args");
-//                            String site = response.getString("site"),
-//                                    network = response.getString("network");
-//                            System.out.println("Site: "+site+"\nNetwork: "+network);
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        error.printStackTrace();
-//                    }
-//                });
-
-            Volley.newRequestQueue(this).
-
-            add(jsonObjReq);
         }
+
+        );
+        RequestQueue queue = VolleySingleton.getmInstance().getmRequestQueue();
+        queue.add(jsonObjReq);
+    }
 
     protected void requestPokemon() {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
@@ -178,4 +139,20 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     }
+
+    private String capitaliser(String word){
+
+        String[] words = word.split(" ");
+        StringBuilder sb = new StringBuilder();
+        if (words[0].length() > 0) {
+            sb.append(Character.toUpperCase(words[0].charAt(0)) + words[0].subSequence(1, words[0].length()).toString().toLowerCase());
+            for (int i = 1; i < words.length; i++) {
+                sb.append(" ");
+                sb.append(Character.toUpperCase(words[i].charAt(0)) + words[i].subSequence(1, words[i].length()).toString().toLowerCase());
+            }
+        }
+        return  sb.toString();
+
+    }
+
 }

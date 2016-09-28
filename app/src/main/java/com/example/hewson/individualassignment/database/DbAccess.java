@@ -1,5 +1,7 @@
 package com.example.hewson.individualassignment.database;
 
+import com.example.hewson.individualassignment.model.Pokemon;
+
 import java.util.List;
 
 /**

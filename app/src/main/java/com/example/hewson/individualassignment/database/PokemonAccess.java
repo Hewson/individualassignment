@@ -2,6 +2,8 @@ package com.example.hewson.individualassignment.database;
 
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.hewson.individualassignment.model.Pokemon;
+
 import java.util.List;
 
 /**

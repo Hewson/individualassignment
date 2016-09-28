@@ -1,13 +1,14 @@
 package com.example.hewson.individualassignment;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.hewson.individualassignment.database.Pokemon;
+import com.example.hewson.individualassignment.model.Pokemon;
 
 import java.util.List;
 
@@ -24,17 +25,19 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
         public TextView name, type;
+        public ImageView thumbnail;
 
         public ViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
             name = (TextView) v.findViewById(R.id.name);
             type = (TextView) v.findViewById(R.id.type);
+            thumbnail = (ImageView) v.findViewById(R.id.thumbnail);
         }
 
         @Override
         public void onClick(View view) {
-            Log.d("DEBUG", "You clicked that");
+            Toast.makeText(view.getContext(), "You clicked that", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -73,6 +76,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         Pokemon pokemon = myPokemonList.get(position);
         holder.name.setText(pokemon.getName());
         holder.type.setText(pokemon.getType());
+        holder.thumbnail.setImageBitmap(pokemon.getIcon());
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -1,4 +1,4 @@
-package com.example.hewson.individualassignment.database;
+package com.example.hewson.individualassignment.model;
 
 import android.graphics.Bitmap;
 
@@ -8,7 +8,16 @@ import android.graphics.Bitmap;
 
 public class Pokemon {
     private int id;
-    private String name, type;
+    private String name, type, iconUrl;
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
     private Bitmap icon;
 
     public int getId() {
