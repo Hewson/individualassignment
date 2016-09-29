@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.hewson.individualassignment.model.Pokemon;
 
@@ -20,12 +21,14 @@ import java.util.List;
 
 public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHolder> {
     private List<Pokemon> myPokemonList;
+    private LayoutInflater inflater;
     private VolleySingleton volleySingleton;
     private ImageLoader imageLoader;
 
     public PokemonAdapter(Context context) {
-        this.volleySingleton = volleySingleton;
-        this.imageLoader = imageLoader;
+        inflater = LayoutInflater.from(context);
+        volleySingleton = VolleySingleton.getmInstance();
+        imageLoader = volleySingleton.getmImageLoader();
     }
 
     // Provide a reference to the views for each data item
@@ -85,7 +88,28 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         Pokemon pokemon = myPokemonList.get(position);
         holder.name.setText(pokemon.getName());
         holder.type.setText(pokemon.getType());
-        holder.thumbnail.setImageBitmap(pokemon.getIcon());
+
+        /*
+        NEED TO
+        CHECK THIS
+        */
+
+        String urlThumb = pokemon.getIconUrl();
+        loadThumbnails(urlThumb, holder);
+    }
+
+    private void loadThumbnails (String urlThumbnail, final ViewHolder holder){
+        imageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                holder.thumbnail.setImageBitmap(response.getBitmap());
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)
