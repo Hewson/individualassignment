@@ -13,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.hewson.individualassignment.model.Pokemon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,15 +21,16 @@ import java.util.List;
  */
 
 public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHolder> {
-    private List<Pokemon> myPokemonList;
+    private List<Pokemon> myPokemonList = new ArrayList<>();
     private LayoutInflater inflater;
     private VolleySingleton volleySingleton;
     private ImageLoader imageLoader;
 
-    public PokemonAdapter(Context context) {
+    public PokemonAdapter(Context context, List<Pokemon> dataset) {
         inflater = LayoutInflater.from(context);
         volleySingleton = VolleySingleton.getmInstance();
         imageLoader = volleySingleton.getmImageLoader();
+        myPokemonList = dataset;
     }
 
     // Provide a reference to the views for each data item
@@ -65,9 +67,9 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public PokemonAdapter(List<Pokemon> myDataset) {
-        myPokemonList = myDataset;
-    }
+//    public PokemonAdapter(List<Pokemon> myDataset) {
+//        myPokemonList = myDataset;
+//    }
 
     // Create new views (invoked by the layout manager)
     @Override
@@ -82,10 +84,11 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         Pokemon pokemon = myPokemonList.get(position);
+        System.out.println(pokemon.toString());
         holder.name.setText(pokemon.getName());
         holder.type.setText(pokemon.getType());
 
@@ -95,10 +98,13 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         */
 
         String urlThumb = pokemon.getIconUrl();
-        loadThumbnails(urlThumb, holder);
+        System.out.println("url thumb is " + urlThumb);
+//        loadThumbnails(urlThumb, holder);
+        loadThumbnails("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png", holder);
     }
 
-    private void loadThumbnails (String urlThumbnail, final ViewHolder holder){
+    private void loadThumbnails(String urlThumbnail, final ViewHolder holder) {
+        imageLoader = volleySingleton.getmImageLoader();
         imageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {

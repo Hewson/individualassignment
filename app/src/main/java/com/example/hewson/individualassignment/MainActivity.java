@@ -31,16 +31,18 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private List<Pokemon> myPokemonList = new ArrayList<>();
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    //private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private PokemonAdapter mAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler1);
-        mAdapter = new PokemonAdapter(myPokemonList);
+        //mAdapter = new PokemonAdapter(this);
+        mAdapter = new PokemonAdapter(this, myPokemonList);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -53,10 +55,11 @@ public class MainActivity extends AppCompatActivity {
         // specify an adapter (see also next example)
         mRecyclerView.addItemDecoration(new PokemonDivider(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
+
+
         if (isOnline()) {
             requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=5");
         }
-
     }
 
     protected void updateDisplay() {
@@ -69,17 +72,16 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 try {
                     JSONArray myArray = response.getJSONArray("results");
+                    String pokeUrl = "";
                     for (int i = 0; i < myArray.length(); i++) {
+                        Pokemon myPokemon = new Pokemon();
                         JSONObject pokemon = (JSONObject) myArray.get(i);
                         String pokeName = capitaliser(pokemon.getString("name"));
-                        String pokeUrl = pokemon.getString("url");
-                        Pokemon myPokemon = new Pokemon();
+                        pokeUrl = pokemon.getString("url");
                         myPokemon.setName(pokeName);
                         myPokemon.setUrl(pokeUrl);
                         myPokemon.setId(i + 1);
-                        Log.d("something", "onResponse: " + pokeUrl);
-                        requestPokemon(pokeUrl);
-                        myPokemonList.add(myPokemon);
+                        myPokemonList.add(requestPokemonUrl(pokeUrl, myPokemon));
                         updateDisplay();
                     }
                 } catch (JSONException e) {
@@ -93,29 +95,30 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("something", "Error: " + error.getMessage());
+                VolleyLog.d("can't request name", "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
         RequestQueue queue = VolleySingleton.getmInstance().getmRequestQueue();
         queue.add(jsonObjReq);
     }
 
-    protected void requestPokemon(String url) {
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+    public Pokemon requestPokemonUrl(String pokeUrl, final Pokemon pokemon) {
+        JsonObjectRequest newRequest = new JsonObjectRequest(Request.Method.GET, pokeUrl, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
+                    System.out.println("did u get here");
                     JSONObject mySprite = response.getJSONObject("sprites");
                     String iconUrl = mySprite.getString("front_default");
                     Log.d("something", "onResponse: " + iconUrl);
-                    Pokemon myPokemon = new Pokemon();
-                    myPokemon.setIconUrl(iconUrl);
-                    myPokemonList.add(myPokemon);
-                    System.out.println(myPokemonList.toString());
-                    updateDisplay();
+                    pokemon.setIconUrl(iconUrl);
+                    System.out.println("the icon url is being set " + iconUrl);
+
                 } catch (JSONException e) {
+                    System.out.println(e.getMessage());
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(),
                             "Error: " + e.getMessage(),
@@ -126,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("something", "Error: " + error.getMessage());
+                VolleyLog.d("could not load sprites", "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -134,8 +137,45 @@ public class MainActivity extends AppCompatActivity {
 
         );
         RequestQueue queue = VolleySingleton.getmInstance().getmRequestQueue();
-        queue.add(jsonObjReq);
+        queue.add(newRequest);
+        return pokemon;
     }
+
+//    protected void requestPokemon(String url) {
+//        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                try {
+//                    JSONObject mySprite = response.getJSONObject("sprites");
+//                    String iconUrl = mySprite.getString("front_default");
+//                    Log.d("something", "onResponse: " + iconUrl);
+//                    Pokemon myPokemon = new Pokemon();
+//                    myPokemon.setIconUrl(iconUrl);
+//                    myPokemonList.add(myPokemon);
+//                    System.out.println(myPokemonList.toString());
+//                    updateDisplay();
+//                } catch (JSONException e) {
+//                    System.out.println(e.getMessage());
+//                    e.printStackTrace();
+//                    Toast.makeText(getApplicationContext(),
+//                            "Error: " + e.getMessage(),
+//                            Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                VolleyLog.d("something", "Error: " + error.getMessage());
+//                Toast.makeText(getApplicationContext(),
+//                        error.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//
+//        );
+//        RequestQueue queue = VolleySingleton.getmInstance().getmRequestQueue();
+//        queue.add(jsonObjReq);
+//    }
 
     protected boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
