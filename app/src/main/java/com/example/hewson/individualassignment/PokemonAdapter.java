@@ -28,7 +28,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
 
     public PokemonAdapter(Context context, List<Pokemon> dataset) {
         inflater = LayoutInflater.from(context);
-        volleySingleton = VolleySingleton.getmInstance();
+        volleySingleton = VolleySingleton.getmInstance(context);
         imageLoader = volleySingleton.getmImageLoader();
         myPokemonList = dataset;
     }
@@ -52,6 +52,8 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         @Override
         public void onClick(View view) {
             Toast.makeText(view.getContext(), "You clicked that", Toast.LENGTH_SHORT).show();
+
+
         }
     }
 
@@ -104,7 +106,6 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
     }
 
     private void loadThumbnails(String urlThumbnail, final ViewHolder holder) {
-        imageLoader = volleySingleton.getmImageLoader();
         imageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
@@ -116,6 +117,10 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
 
             }
         });
+        /*DO I NEED TO
+        ADD A REQUEST HERE
+        */
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)

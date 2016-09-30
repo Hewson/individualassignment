@@ -1,6 +1,7 @@
 package com.example.hewson.individualassignment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     //private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private PokemonAdapter mAdapter;
+    RequestQueue queue = VolleySingleton.getmInstance(this.getApplicationContext()).getRequestQueue();
 
 
     @Override
@@ -100,20 +104,17 @@ public class MainActivity extends AppCompatActivity {
                         error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        RequestQueue queue = VolleySingleton.getmInstance().getmRequestQueue();
-        queue.add(jsonObjReq);
+        VolleySingleton.getmInstance(this).addToRequestQueue(jsonObjReq);
     }
 
     public Pokemon requestPokemonUrl(String pokeUrl, final Pokemon pokemon) {
-        JsonObjectRequest newRequest = new JsonObjectRequest(Request.Method.GET, pokeUrl, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, pokeUrl, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     System.out.println("did u get here");
                     JSONObject mySprite = response.getJSONObject("sprites");
                     String iconUrl = mySprite.getString("front_default");
-                    Log.d("something", "onResponse: " + iconUrl);
                     pokemon.setIconUrl(iconUrl);
                     System.out.println("the icon url is being set " + iconUrl);
 
@@ -136,46 +137,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         );
-        RequestQueue queue = VolleySingleton.getmInstance().getmRequestQueue();
-        queue.add(newRequest);
+        VolleySingleton.getmInstance(this).addToRequestQueue(jsonObjReq);
         return pokemon;
     }
-
-//    protected void requestPokemon(String url) {
-//        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                try {
-//                    JSONObject mySprite = response.getJSONObject("sprites");
-//                    String iconUrl = mySprite.getString("front_default");
-//                    Log.d("something", "onResponse: " + iconUrl);
-//                    Pokemon myPokemon = new Pokemon();
-//                    myPokemon.setIconUrl(iconUrl);
-//                    myPokemonList.add(myPokemon);
-//                    System.out.println(myPokemonList.toString());
-//                    updateDisplay();
-//                } catch (JSONException e) {
-//                    System.out.println(e.getMessage());
-//                    e.printStackTrace();
-//                    Toast.makeText(getApplicationContext(),
-//                            "Error: " + e.getMessage(),
-//                            Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                VolleyLog.d("something", "Error: " + error.getMessage());
-//                Toast.makeText(getApplicationContext(),
-//                        error.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//
-//        );
-//        RequestQueue queue = VolleySingleton.getmInstance().getmRequestQueue();
-//        queue.add(jsonObjReq);
-//    }
 
     protected boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -200,4 +164,8 @@ public class MainActivity extends AppCompatActivity {
         return sb.toString();
     }
 
+    public void viewSpecificPokemon(View view) {
+            Intent intent = new Intent(this, SpecificPokemon.class);
+            startActivity(intent);
+    }
 }
