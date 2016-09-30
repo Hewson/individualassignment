@@ -51,7 +51,7 @@ public final class PokemonsContract {
         ContentValues values = new ContentValues();
         values.put(PokemonsEntry.COLUMN_NAME_ID, Pokemon.getId());
         values.put(PokemonsEntry.COLUMN_NAME_NAME, Pokemon.getName());;
-        values.put(PokemonsEntry.COLUMN_NAME_TYPE, Pokemon.getType());
+        //values.put(PokemonsEntry.COLUMN_NAME_TYPE, Pokemon.getType());
 
         long newRowId;
         newRowId = db.insert(TABLE_NAME, null, values);
@@ -90,7 +90,7 @@ public final class PokemonsContract {
             Pokemon pokemon = new Pokemon();
             pokemon.setId(cur.getInt(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ID)));
             pokemon.setName(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_NAME)));
-            pokemon.setType(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE)));
+            //pokemon.setType(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE)));
             Pokemons.add(pokemon);
         }
 
@@ -142,7 +142,7 @@ public final class PokemonsContract {
             pokemon = new Pokemon();
             pokemon.setId(cur.getInt(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ID)));
             pokemon.setName(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_NAME)));
-            pokemon.setType(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE)));
+            //pokemon.setType(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE)));
         }
         cur.close();
         db.close();

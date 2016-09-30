@@ -57,17 +57,6 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         }
     }
 
-    public void add(int position, Pokemon pokemon) {
-        myPokemonList.add(position, pokemon);
-        notifyItemInserted(position);
-    }
-
-    public void remove(String item) {
-        int position = myPokemonList.indexOf(item);
-        myPokemonList.remove(position);
-        notifyItemRemoved(position);
-    }
-
     // Provide a suitable constructor (depends on the kind of dataset)
 //    public PokemonAdapter(List<Pokemon> myDataset) {
 //        myPokemonList = myDataset;
@@ -75,8 +64,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
 
     // Create new views (invoked by the layout manager)
     @Override
-    public PokemonAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                        int viewType) {
+    public PokemonAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
         // set the view's size, margins, paddings and layout parameters
@@ -90,19 +78,14 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         Pokemon pokemon = myPokemonList.get(position);
-        System.out.println(pokemon.toString());
         holder.name.setText(pokemon.getName());
-        holder.type.setText(pokemon.getType());
-
         /*
         NEED TO
         CHECK THIS
         */
-
         String urlThumb = pokemon.getIconUrl();
-        System.out.println("url thumb is " + urlThumb);
-//        loadThumbnails(urlThumb, holder);
-        loadThumbnails("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png", holder);
+        loadThumbnails(urlThumb, holder);
+//        loadThumbnails("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png", holder);
     }
 
     private void loadThumbnails(String urlThumbnail, final ViewHolder holder) {
@@ -120,7 +103,6 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         /*DO I NEED TO
         ADD A REQUEST HERE
         */
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)

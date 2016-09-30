@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     //private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private PokemonAdapter mAdapter;
-    RequestQueue queue = VolleySingleton.getmInstance(this.getApplicationContext()).getRequestQueue();
+    //RequestQueue queue = VolleySingleton.getmInstance(this.getApplicationContext()).getRequestQueue();
 
 
     @Override
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (isOnline()) {
-            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=5");
+            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=151");
         }
     }
 
@@ -76,18 +76,18 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 try {
                     JSONArray myArray = response.getJSONArray("results");
-                    String pokeUrl = "";
+                    String pokeUrl;
                     for (int i = 0; i < myArray.length(); i++) {
                         Pokemon myPokemon = new Pokemon();
                         JSONObject pokemon = (JSONObject) myArray.get(i);
-                        String pokeName = capitaliser(pokemon.getString("name"));
                         pokeUrl = pokemon.getString("url");
+                        String pokeName = capitaliser(pokemon.getString("name"));
                         myPokemon.setName(pokeName);
                         myPokemon.setUrl(pokeUrl);
                         myPokemon.setId(i + 1);
-                        myPokemonList.add(requestPokemonUrl(pokeUrl, myPokemon));
-                        updateDisplay();
+                        requestPokemonUrl(pokeUrl, myPokemon);
                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(),
@@ -112,12 +112,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    System.out.println("did u get here");
                     JSONObject mySprite = response.getJSONObject("sprites");
                     String iconUrl = mySprite.getString("front_default");
                     pokemon.setIconUrl(iconUrl);
-                    System.out.println("the icon url is being set " + iconUrl);
-
+                    JSONArray myTypes = response.getJSONArray("types");
+                    ArrayList<String> types = new ArrayList<>();
+                    for (int i = myTypes.length() - 1; i >= 0; i--) {
+                        JSONObject slot = myTypes.getJSONObject(i);
+                        JSONObject type = slot.getJSONObject("type");
+                        String name = type.getString("name");
+                        types.add(name);
+                    }
+                    pokemon.setType(types);
+                    myPokemonList.add(pokemon);
+                    updateDisplay();
                 } catch (JSONException e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
@@ -165,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void viewSpecificPokemon(View view) {
-            Intent intent = new Intent(this, SpecificPokemon.class);
-            startActivity(intent);
+        Intent intent = new Intent(this, SpecificPokemon.class);
+        startActivity(intent);
     }
 }
