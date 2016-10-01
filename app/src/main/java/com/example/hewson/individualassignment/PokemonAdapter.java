@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.example.hewson.individualassignment.database.DBHelper;
+import com.example.hewson.individualassignment.database.PokemonAccess;
 import com.example.hewson.individualassignment.model.Pokemon;
 
 import java.util.ArrayList;
@@ -28,12 +30,16 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
     private ImageLoader imageLoader;
     private Context context;
     private ClickListener clickListener;
+    private DBHelper dbHelper;
+    private PokemonAccess pokemonAccess;
 
     public PokemonAdapter(Context context, List<Pokemon> dataset) {
+        dbHelper = new DBHelper(context);
+        pokemonAccess = new PokemonAccess(dbHelper);
         inflater = LayoutInflater.from(context);
         volleySingleton = VolleySingleton.getInstance();
         imageLoader = volleySingleton.getImageLoader();
-        myPokemonList = dataset;
+        myPokemonList = pokemonAccess.getAll();
         this.context = context;
     }
 
@@ -56,56 +62,42 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         }
     }
 
-    public PokemonAdapter(List<Pokemon> myPokemonList) {
-        this.myPokemonList = myPokemonList;
-    }
-
     @Override
     public PokemonAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
-        // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    public void setPokemon(List<Pokemon> pokemon) {
+        this.myPokemonList = pokemon;
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
         Pokemon pokemon = myPokemonList.get(position);
+        //myPokemonList.get(position);
         holder.id.setText(Integer.toString(pokemon.getId()));
         holder.name.setText(pokemon.getName());
-        holder.type.setText(pokemon.printArrayList(pokemon.getType()));
-        String urlThumb = pokemon.getIconUrl();
-        loadThumbnails(urlThumb, pokemon);
+//        holder.type.setText(pokemon.printArrayList(pokemon.getType()));
         holder.thumbnail.setImageBitmap(pokemon.getIcon());
-        /*
-        NEED TO
-        CHECK THIS
-        */
-        //String urlThumb = pokemon.getIconUrl();
-        //loadThumbnails(urlThumb, holder);
-        //loadThumbnails("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png", holder);
     }
 
-//    private void loadThumbnails(String urlThumbnail, final ViewHolder holder) {
-    private Pokemon loadThumbnails(String urlThumbnail, final Pokemon pokemon) {
-        imageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
-            @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                //holder.thumbnail.setImageBitmap(response.getBitmap());
-                pokemon.setIcon(response.getBitmap());
-            }
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        return pokemon;
-    }
+//    private Pokemon loadThumbnails(String urlThumbnail, final Pokemon pokemon) {
+//        imageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
+//            @Override
+//            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+//                pokemon.setIcon(response.getBitmap());
+//            }
+//
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }
+//        });
+//        return pokemon;
+//    }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override

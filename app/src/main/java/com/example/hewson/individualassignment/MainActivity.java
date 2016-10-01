@@ -2,6 +2,7 @@ package com.example.hewson.individualassignment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.hewson.individualassignment.database.DBHelper;
+import com.example.hewson.individualassignment.database.PokemonAccess;
 import com.example.hewson.individualassignment.model.Pokemon;
 
 
@@ -34,34 +37,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PokemonAdapter.ClickListener {
-    private List<Pokemon> myPokemonList = new ArrayList<>();
     private RecyclerView mRecyclerView;
+    private List<Pokemon> pokemonList;
     private RecyclerView.LayoutManager mLayoutManager;
     private PokemonAdapter mAdapter;
+    private DBHelper dbHelper;
+    private PokemonAccess pokemonAccess;
+    private VolleySingleton volleySingleton;
+    private ImageLoader imageLoader;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        dbHelper = new DBHelper(this);
+        pokemonAccess = new PokemonAccess(dbHelper);
+        pokemonList = new ArrayList<>();
+        volleySingleton = VolleySingleton.getInstance();
+        imageLoader = volleySingleton.getImageLoader();
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler1);
-        //mAdapter = new PokemonAdapter(this);
-        mAdapter = new PokemonAdapter(this, myPokemonList);
+        mAdapter = new PokemonAdapter(this, pokemonAccess.getAll());
         mAdapter.setClickListener(this);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        // specify an adapter (see also next example)
         mRecyclerView.addItemDecoration(new PokemonDivider(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
-
         if (isOnline()) {
-            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=20?offset=20");
+            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=20?offset=5");
         }
     }
 
@@ -78,16 +83,14 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                     String pokeUrl;
                     for (int i = 0; i < myArray.length(); i++) {
                         Pokemon myPokemon = new Pokemon();
-                        JSONObject pokemon = (JSONObject) myArray.get(i);
-                        pokeUrl = pokemon.getString("url");
-                        String pokeName = capitaliser(pokemon.getString("name"));
+                        JSONObject pokemonObj = (JSONObject) myArray.get(i);
+                        pokeUrl = pokemonObj.getString("url");
+                        String pokeName = capitaliser(pokemonObj.getString("name"));
                         myPokemon.setName(pokeName);
                         myPokemon.setUrl(pokeUrl);
                         myPokemon.setId(i + 1);
-                        updateDisplay();
                         requestPokemonUrl(pokeUrl, myPokemon);
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(),
@@ -98,16 +101,16 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
         }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("can't request name", "Error: " + error.getMessage());
-                error.printStackTrace();
+            public void onErrorResponse(VolleyError e) {
+                VolleyLog.d("can't request name", "Error: " + e.getMessage());
+                e.printStackTrace();
             }
         });
         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(60000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance().getRequestQueue().add(jsonObjReq);
     }
 
-    public Pokemon requestPokemonUrl(String pokeUrl, final Pokemon pokemon) {
+    public void requestPokemonUrl(String pokeUrl, final Pokemon pokemon) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, pokeUrl, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -115,22 +118,6 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                     JSONObject mySprite = response.getJSONObject("sprites");
                     String iconUrl = mySprite.getString("front_default");
                     pokemon.setIconUrl(iconUrl);
-
-
-                    /*imageLoader.get(iconUrl, new ImageLoader.ImageListener() {
-                        @Override
-                        public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                            pokemon.setIcon(response.getBitmap());
-                            //holder.thumbnail.setImageBitmap(response.getBitmap());
-                        }
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-
-                        }
-                    });*/
-
-
                     JSONArray myTypes = response.getJSONArray("types");
                     ArrayList<String> types = new ArrayList<>();
                     for (int i = myTypes.length() - 1; i >= 0; i--) {
@@ -140,30 +127,35 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                         types.add(name);
                     }
                     pokemon.setType(types);
-                    myPokemonList.add(pokemon);
-                    updateDisplay();
+
+                    imageLoader.get(iconUrl, new ImageLoader.ImageListener() {
+                        @Override
+                        public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                            pokemon.setIcon(response.getBitmap());
+                        }
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    });
+                    pokemonList.add(pokemon);
+                    mAdapter.setPokemon(pokemonList);
+                    pokemonAccess.insertPokemon(pokemon);
                 } catch (JSONException e) {
-                    System.out.println(e.getMessage());
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(),
-                            "Error: " + e.getMessage(),
-                            Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("could not load sprites", "Error: " + error.getMessage());
-                error.printStackTrace();
-                error.toString();
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
             }
         }
-
         );
         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(60000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance().getRequestQueue().add(jsonObjReq);
-        return pokemon;
     }
 
     protected boolean isOnline() {

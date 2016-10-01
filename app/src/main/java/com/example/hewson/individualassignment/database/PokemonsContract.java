@@ -30,6 +30,8 @@ public final class PokemonsContract {
                     PokemonsEntry._ID + " INTEGER PRIMARY KEY," +
                     PokemonsEntry.COLUMN_NAME_ID + INT_TYPE + COMMA_SEP +
                     PokemonsEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_ICONURL + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_URL + TEXT_TYPE + COMMA_SEP +
                     PokemonsEntry.COLUMN_NAME_TYPE + TEXT_TYPE + " )";
 
     public static final String SQL_DELETE_ENTRIES =
@@ -38,6 +40,8 @@ public final class PokemonsContract {
     public abstract class PokemonsEntry implements BaseColumns {
         public static final String COLUMN_NAME_ID = "id";
         public static final String COLUMN_NAME_NAME = "name";
+        public static final String COLUMN_NAME_ICONURL = "iconurl";
+        public static final String COLUMN_NAME_URL = "url";
         public static final String COLUMN_NAME_TYPE = "img";
     }
 
@@ -50,8 +54,9 @@ public final class PokemonsContract {
 
         ContentValues values = new ContentValues();
         values.put(PokemonsEntry.COLUMN_NAME_ID, Pokemon.getId());
-        values.put(PokemonsEntry.COLUMN_NAME_NAME, Pokemon.getName());;
-        //values.put(PokemonsEntry.COLUMN_NAME_TYPE, Pokemon.getType());
+        values.put(PokemonsEntry.COLUMN_NAME_NAME, Pokemon.getName());
+        values.put(PokemonsEntry.COLUMN_NAME_ICONURL, Pokemon.getIconUrl());
+        values.put(PokemonsEntry.COLUMN_NAME_URL, Pokemon.getUrl());
 
         long newRowId;
         newRowId = db.insert(TABLE_NAME, null, values);
@@ -68,6 +73,8 @@ public final class PokemonsContract {
                 PokemonsEntry._ID,
                 PokemonsEntry.COLUMN_NAME_ID,
                 PokemonsEntry.COLUMN_NAME_NAME,
+                PokemonsEntry.COLUMN_NAME_ICONURL,
+                PokemonsEntry.COLUMN_NAME_URL,
                 PokemonsEntry.COLUMN_NAME_TYPE
         };
 
@@ -90,6 +97,8 @@ public final class PokemonsContract {
             Pokemon pokemon = new Pokemon();
             pokemon.setId(cur.getInt(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ID)));
             pokemon.setName(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_NAME)));
+            pokemon.setIconUrl(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICONURL)));
+            pokemon.setUrl(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_URL)));
             //pokemon.setType(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE)));
             Pokemons.add(pokemon);
         }
@@ -124,6 +133,8 @@ public final class PokemonsContract {
         String[] columns = {
                 PokemonsEntry._ID,
                 PokemonsEntry.COLUMN_NAME_ID,
+                PokemonsEntry.COLUMN_NAME_ICONURL,
+                PokemonsEntry.COLUMN_NAME_URL,
                 PokemonsEntry.COLUMN_NAME_NAME,
                 PokemonsEntry.COLUMN_NAME_TYPE
         };
@@ -142,6 +153,8 @@ public final class PokemonsContract {
             pokemon = new Pokemon();
             pokemon.setId(cur.getInt(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ID)));
             pokemon.setName(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_NAME)));
+            pokemon.setIconUrl(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICONURL)));
+            pokemon.setUrl(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_URL)));
             //pokemon.setType(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE)));
         }
         cur.close();

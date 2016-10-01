@@ -24,8 +24,8 @@ public class PokemonAccess implements DbAccess {
     }
 
     //Example standard contract methods
-    public void insertPokemon(Pokemon ball){
-        PokemonsContract.insert(ball);
+    public void insertPokemon(Pokemon pokemon){
+        PokemonsContract.insert(pokemon);
     }
 
     public void deletePokemon(int id){
@@ -34,8 +34,8 @@ public class PokemonAccess implements DbAccess {
 
     //Example of extra methods
     public void insertPokemons(List<Pokemon> Pokemons){
-        for(Pokemon ball : Pokemons){
-            PokemonsContract.insert(ball);
+        for(Pokemon pokemon : Pokemons){
+            PokemonsContract.insert(pokemon);
         }
     }
 
@@ -45,7 +45,7 @@ public class PokemonAccess implements DbAccess {
         }
     }
 
-    public boolean hasBall(int id){
+    public boolean hasPokemon(int id){
         return PokemonsContract.getPokemon(id) != null;
     }
 }
