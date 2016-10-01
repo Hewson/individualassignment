@@ -1,6 +1,7 @@
 package com.example.hewson.individualassignment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,22 +26,25 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
     private LayoutInflater inflater;
     private VolleySingleton volleySingleton;
     private ImageLoader imageLoader;
+    private Context context;
+    private ClickListener clickListener;
 
     public PokemonAdapter(Context context, List<Pokemon> dataset) {
         inflater = LayoutInflater.from(context);
         volleySingleton = VolleySingleton.getInstance();
         imageLoader = volleySingleton.getImageLoader();
         myPokemonList = dataset;
+        this.context = context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        // each data item is just a string in this case
-        public TextView name, type;
+        public TextView name, type, id;
         public ImageView thumbnail;
 
         public ViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
+            id = (TextView) v.findViewById(R.id.id);
             name = (TextView) v.findViewById(R.id.name);
             type = (TextView) v.findViewById(R.id.type);
             thumbnail = (ImageView) v.findViewById(R.id.thumbnail);
@@ -48,9 +52,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(view.getContext(), "You clicked that", Toast.LENGTH_SHORT).show();
-
-
+            clickListener.itemClicked(view, getAdapterPosition());
         }
     }
 
@@ -73,6 +75,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         Pokemon pokemon = myPokemonList.get(position);
+        holder.id.setText(Integer.toString(pokemon.getId()));
         holder.name.setText(pokemon.getName());
         holder.type.setText(pokemon.printArrayList(pokemon.getType()));
         String urlThumb = pokemon.getIconUrl();
@@ -110,4 +113,11 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         return myPokemonList.size();
     }
 
+    public interface ClickListener {
+        public void itemClicked(View v, int position);
+    }
+
+    public void setClickListener(ClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
 }

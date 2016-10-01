@@ -33,7 +33,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PokemonAdapter.ClickListener {
     private List<Pokemon> myPokemonList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler1);
         //mAdapter = new PokemonAdapter(this);
         mAdapter = new PokemonAdapter(this, myPokemonList);
+        mAdapter.setClickListener(this);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -59,9 +60,8 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(new PokemonDivider(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
 
-
         if (isOnline()) {
-            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=5");
+            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=20?offset=20");
         }
     }
 
@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                         myPokemon.setName(pokeName);
                         myPokemon.setUrl(pokeUrl);
                         myPokemon.setId(i + 1);
+                        updateDisplay();
                         requestPokemonUrl(pokeUrl, myPokemon);
                     }
 
@@ -102,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 error.printStackTrace();
             }
         });
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(60000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance().getRequestQueue().add(jsonObjReq);
     }
 
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = myTypes.length() - 1; i >= 0; i--) {
                         JSONObject slot = myTypes.getJSONObject(i);
                         JSONObject type = slot.getJSONObject("type");
-                        String name = type.getString("name");
+                        String name = capitaliser(type.getString("name"));
                         types.add(name);
                     }
                     pokemon.setType(types);
@@ -190,5 +192,10 @@ public class MainActivity extends AppCompatActivity {
     public void viewSpecificPokemon(View view) {
         Intent intent = new Intent(this, SpecificPokemon.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void itemClicked(View v, int position) {
+        startActivity(new Intent(this, SpecificPokemon.class));
     }
 }
