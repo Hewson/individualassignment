@@ -14,11 +14,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hewson.individualassignment.model.Pokemon;
@@ -34,11 +36,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private List<Pokemon> myPokemonList = new ArrayList<>();
     private RecyclerView mRecyclerView;
-    //private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private PokemonAdapter mAdapter;
-    //RequestQueue queue = VolleySingleton.getmInstance(this.getApplicationContext()).getRequestQueue();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (isOnline()) {
-            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=151");
+            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=5");
         }
     }
 
@@ -100,11 +99,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("can't request name", "Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                error.printStackTrace();
             }
         });
-        VolleySingleton.getmInstance(this).addToRequestQueue(jsonObjReq);
+        VolleySingleton.getInstance().getRequestQueue().add(jsonObjReq);
     }
 
     public Pokemon requestPokemonUrl(String pokeUrl, final Pokemon pokemon) {
@@ -115,6 +113,22 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject mySprite = response.getJSONObject("sprites");
                     String iconUrl = mySprite.getString("front_default");
                     pokemon.setIconUrl(iconUrl);
+
+
+                    /*imageLoader.get(iconUrl, new ImageLoader.ImageListener() {
+                        @Override
+                        public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                            pokemon.setIcon(response.getBitmap());
+                            //holder.thumbnail.setImageBitmap(response.getBitmap());
+                        }
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    });*/
+
+
                     JSONArray myTypes = response.getJSONArray("types");
                     ArrayList<String> types = new ArrayList<>();
                     for (int i = myTypes.length() - 1; i >= 0; i--) {
@@ -139,13 +153,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("could not load sprites", "Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                error.printStackTrace();
+                error.toString();
             }
         }
 
         );
-        VolleySingleton.getmInstance(this).addToRequestQueue(jsonObjReq);
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(60000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        VolleySingleton.getInstance().getRequestQueue().add(jsonObjReq);
         return pokemon;
     }
 

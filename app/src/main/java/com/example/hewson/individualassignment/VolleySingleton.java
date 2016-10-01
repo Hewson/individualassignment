@@ -6,8 +6,13 @@ import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.LruCache;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
@@ -16,14 +21,11 @@ import com.android.volley.toolbox.Volley;
  */
 
 public class VolleySingleton extends Application {
+    private static VolleySingleton sInstance=null;
     private ImageLoader mImageLoader;
     private RequestQueue mRequestQueue;
-    private static VolleySingleton mInstance = null;
-    private static Context mCtx;
-
-    private VolleySingleton(Context context){
-        mCtx = context;
-        mRequestQueue=getRequestQueue();
+    private VolleySingleton(){
+        mRequestQueue=Volley.newRequestQueue(MyPokedex.getAppContext());
         mImageLoader=new ImageLoader(mRequestQueue,new ImageLoader.ImageCache() {
 
             private LruCache<String, Bitmap> cache=new LruCache<>((int)(Runtime.getRuntime().maxMemory()/1024)/8);
@@ -38,34 +40,17 @@ public class VolleySingleton extends Application {
             }
         });
     }
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mInstance = this;
-    }
-
-    public static synchronized VolleySingleton getmInstance(Context context) {
-        if(mInstance==null){
-            mInstance = new VolleySingleton(context);
+    public static VolleySingleton getInstance(){
+        if(sInstance==null)
+        {
+            sInstance=new VolleySingleton();
         }
-        return mInstance;
+        return sInstance;
     }
-
-    public ImageLoader getmImageLoader() {
-
-        return mImageLoader;
-    }
-
-    public RequestQueue getRequestQueue() {
-        if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
-            mRequestQueue.start();
-        }
+    public RequestQueue getRequestQueue(){
         return mRequestQueue;
-
     }
-
-    public <T> void addToRequestQueue(Request<T> req) {
-        getRequestQueue().add(req);
+    public ImageLoader getImageLoader(){
+        return mImageLoader;
     }
 }

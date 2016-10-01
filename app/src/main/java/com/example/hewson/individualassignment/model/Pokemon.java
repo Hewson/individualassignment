@@ -65,6 +65,14 @@ public class Pokemon {
         this.url = url;
     }
 
+    public String printArrayList(ArrayList<String> types) {
+        String result = "";
+        for (int i = 0; i < types.size(); i++) {
+            result += " " + types.get(i);
+        }
+        return result;
+    }
+
     @Override
     public String toString() {
         return "Pokemon{" +

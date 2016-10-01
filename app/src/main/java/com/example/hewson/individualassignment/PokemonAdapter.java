@@ -28,14 +28,11 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
 
     public PokemonAdapter(Context context, List<Pokemon> dataset) {
         inflater = LayoutInflater.from(context);
-        volleySingleton = VolleySingleton.getmInstance(context);
-        imageLoader = volleySingleton.getmImageLoader();
+        volleySingleton = VolleySingleton.getInstance();
+        imageLoader = volleySingleton.getImageLoader();
         myPokemonList = dataset;
     }
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
         public TextView name, type;
@@ -57,12 +54,10 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         }
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-//    public PokemonAdapter(List<Pokemon> myDataset) {
-//        myPokemonList = myDataset;
-//    }
+    public PokemonAdapter(List<Pokemon> myPokemonList) {
+        this.myPokemonList = myPokemonList;
+    }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public PokemonAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
@@ -79,20 +74,26 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         // - replace the contents of the view with that element
         Pokemon pokemon = myPokemonList.get(position);
         holder.name.setText(pokemon.getName());
+        holder.type.setText(pokemon.printArrayList(pokemon.getType()));
+        String urlThumb = pokemon.getIconUrl();
+        loadThumbnails(urlThumb, pokemon);
+        holder.thumbnail.setImageBitmap(pokemon.getIcon());
         /*
         NEED TO
         CHECK THIS
         */
-        String urlThumb = pokemon.getIconUrl();
-        loadThumbnails(urlThumb, holder);
-//        loadThumbnails("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png", holder);
+        //String urlThumb = pokemon.getIconUrl();
+        //loadThumbnails(urlThumb, holder);
+        //loadThumbnails("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png", holder);
     }
 
-    private void loadThumbnails(String urlThumbnail, final ViewHolder holder) {
+//    private void loadThumbnails(String urlThumbnail, final ViewHolder holder) {
+    private Pokemon loadThumbnails(String urlThumbnail, final Pokemon pokemon) {
         imageLoader.get(urlThumbnail, new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                holder.thumbnail.setImageBitmap(response.getBitmap());
+                //holder.thumbnail.setImageBitmap(response.getBitmap());
+                pokemon.setIcon(response.getBitmap());
             }
 
             @Override
@@ -100,9 +101,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
 
             }
         });
-        /*DO I NEED TO
-        ADD A REQUEST HERE
-        */
+        return pokemon;
     }
 
     // Return the size of your dataset (invoked by the layout manager)
