@@ -1,8 +1,7 @@
-package com.example.hewson.individualassignment;
+package com.example.hewson.individualassignment.application;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -12,26 +11,31 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import com.example.hewson.individualassignment.controller.PokemonAdapter;
+import com.example.hewson.individualassignment.R;
 import com.example.hewson.individualassignment.database.DBHelper;
 import com.example.hewson.individualassignment.database.PokemonAccess;
 import com.example.hewson.individualassignment.model.Pokemon;
+import com.example.hewson.individualassignment.network.VolleySingleton;
+import com.example.hewson.individualassignment.view.PokemonDivider;
+import com.example.hewson.individualassignment.view.SpecificPokemon;
 
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
     private VolleySingleton volleySingleton;
     private ImageLoader imageLoader;
     private Context context;
+    private static final String TAG = MainActivity.class.getName();
+    private ProgressBar progressBar;
+    private TextView tV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +64,9 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
         volleySingleton = VolleySingleton.getInstance();
         imageLoader = volleySingleton.getImageLoader();
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler1);
-        mAdapter = new PokemonAdapter(this, pokemonAccess.getAll());
+        progressBar = (ProgressBar) findViewById(R.id.progress);
+        tV = (TextView) findViewById(R.id.loading);
+        mAdapter = new PokemonAdapter(this, pokemonList);
         mAdapter.setClickListener(this);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
@@ -65,13 +74,19 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new PokemonDivider(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
-        if (isOnline()) {
-            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=20?offset=5");
-        }
-    }
+        if (pokemonAccess.getAll().isEmpty() && isOnline()) {
+            Log.d(TAG, "onCreate: " + "doing json request");
+            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=151");
+            Log.d(TAG, "all pokemon in db after json request: " + pokemonAccess.getAll().toString());
+            updateDisplay();
 
-    protected void updateDisplay() {
-        mAdapter.notifyDataSetChanged();
+        } else {
+            Log.d(TAG, "onCreate: " + "loading from db");
+            Log.d(TAG, "all pokemon in db: " + pokemonAccess.getAll().toString());
+            updateDisplay();
+            progressBar.setVisibility(View.GONE);
+            tV.setVisibility(View.GONE);
+        }
     }
 
     protected void requestPokemonName(String url) {
@@ -88,7 +103,8 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                         String pokeName = capitaliser(pokemonObj.getString("name"));
                         myPokemon.setName(pokeName);
                         myPokemon.setUrl(pokeUrl);
-                        myPokemon.setId(i + 1);
+                        String id = "#" + String.format("%03d", i+1);
+                        myPokemon.setId(id);
                         requestPokemonUrl(pokeUrl, myPokemon);
                     }
                 } catch (JSONException e) {
@@ -115,33 +131,48 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
             @Override
             public void onResponse(JSONObject response) {
                 try {
+                    progressBar.setVisibility(View.VISIBLE);
+                    tV.setVisibility(View.VISIBLE);
                     JSONObject mySprite = response.getJSONObject("sprites");
                     String iconUrl = mySprite.getString("front_default");
                     pokemon.setIconUrl(iconUrl);
                     JSONArray myTypes = response.getJSONArray("types");
-                    ArrayList<String> types = new ArrayList<>();
+                    int counter = 0;
                     for (int i = myTypes.length() - 1; i >= 0; i--) {
+                        counter++;
                         JSONObject slot = myTypes.getJSONObject(i);
                         JSONObject type = slot.getJSONObject("type");
                         String name = capitaliser(type.getString("name"));
-                        types.add(name);
+                        if (counter==1) {
+                            pokemon.setType1(name);
+                        }
+                        else if (counter==2) {
+                            pokemon.setType2(name);
+                        }
+                        else {
+
+                        }
                     }
-                    pokemon.setType(types);
 
                     imageLoader.get(iconUrl, new ImageLoader.ImageListener() {
                         @Override
                         public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                             pokemon.setIcon(response.getBitmap());
+                            if (pokemon.getIcon() != null) {
+                                pokemonList.add(pokemon);
+                                pokemonAccess.insertPokemon(pokemon);
+                                progressBar.setVisibility(View.GONE);
+                                tV.setVisibility(View.GONE);
+                            }
+                            mAdapter.setPokemon(pokemonAccess.getAll());
+                            updateDisplay();
                         }
-
                         @Override
                         public void onErrorResponse(VolleyError error) {
 
                         }
                     });
-                    pokemonList.add(pokemon);
-                    mAdapter.setPokemon(pokemonList);
-                    pokemonAccess.insertPokemon(pokemon);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -189,5 +220,9 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
     @Override
     public void itemClicked(View v, int position) {
         startActivity(new Intent(this, SpecificPokemon.class));
+    }
+
+    protected void updateDisplay() {
+        mAdapter.notifyDataSetChanged();
     }
 }

@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.hewson.individualassignment.model.Pokemon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,6 +44,14 @@ public class PokemonAccess implements DbAccess {
         for(int id : ids){
             PokemonsContract.delete(id);
         }
+    }
+
+    public String printPokemons(List<Pokemon> pokemons) {
+        String result = "";
+        for (int i = 0; i < pokemons.size(); i++) {
+            result += pokemons.get(i);
+        }
+        return result;
     }
 
     public boolean hasPokemon(int id){

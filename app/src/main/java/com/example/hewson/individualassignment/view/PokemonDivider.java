@@ -1,4 +1,4 @@
-package com.example.hewson.individualassignment;
+package com.example.hewson.individualassignment.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;

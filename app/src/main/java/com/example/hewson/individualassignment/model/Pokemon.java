@@ -9,19 +9,14 @@ import java.util.ArrayList;
  */
 
 public class Pokemon {
-    private int id;
-    private String name, iconUrl, url;
-    public ArrayList<String> type;
+    private String id, name, iconUrl, url, type1, type2;
     private Bitmap icon;
 
-    public Pokemon() {
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -31,22 +26,6 @@ public class Pokemon {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public ArrayList<String> getType() {
-        return type;
-    }
-
-    public void setType(ArrayList<String> type) {
-        this.type = type;
-    }
-
-    public Bitmap getIcon() {
-        return icon;
-    }
-
-    public void setIcon(Bitmap icon) {
-        this.icon = icon;
     }
 
     public String getIconUrl() {
@@ -65,6 +44,44 @@ public class Pokemon {
         this.url = url;
     }
 
+    public String getType1() {
+        return type1;
+    }
+
+    public void setType1(String type1) {
+        this.type1 = type1;
+    }
+
+    public String getType2() {
+        return type2;
+    }
+
+    public void setType2(String type2) {
+        this.type2 = type2;
+    }
+
+    public Bitmap getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Bitmap icon) {
+        this.icon = icon;
+    }
+
+    public Pokemon() {
+
+    }
+
+    public Pokemon(String id, String name, String iconUrl, String url, String type1, String type2, Bitmap icon) {
+        this.id = id;
+        this.name = name;
+        this.iconUrl = iconUrl;
+        this.url = url;
+        this.type1 = type1;
+        this.type2 = type2;
+        this.icon = icon;
+    }
+
     public String printArrayList(ArrayList<String> types) {
         String result = "";
         for (int i = 0; i < types.size(); i++) {
@@ -73,16 +90,15 @@ public class Pokemon {
         return result;
     }
 
-
-
     @Override
     public String toString() {
-        return "Pokemon{" +
+        return "\nPokemon{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", iconUrl='" + iconUrl + '\'' +
                 ", url='" + url + '\'' +
-                ", type=" + type +
+                ", type1='" + type1 + '\'' +
+                ", type2='" + type2 + '\'' +
                 ", icon=" + icon +
                 '}';
     }

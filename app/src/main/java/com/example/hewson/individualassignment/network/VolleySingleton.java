@@ -1,20 +1,13 @@
-package com.example.hewson.individualassignment;
+package com.example.hewson.individualassignment.network;
 
 import android.app.Application;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.text.TextUtils;
 import android.util.LruCache;
 
-import com.android.volley.Cache;
-import com.android.volley.Network;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.example.hewson.individualassignment.application.MyPokedex;
 
 /**
  * Created by Hewson on 9/28/2016.

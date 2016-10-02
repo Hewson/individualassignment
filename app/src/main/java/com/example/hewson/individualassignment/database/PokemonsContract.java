@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.provider.BaseColumns;
 
 import com.example.hewson.individualassignment.model.Pokemon;
@@ -28,11 +29,13 @@ public final class PokemonsContract {
     public static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TABLE_NAME + " (" +
                     PokemonsEntry._ID + " INTEGER PRIMARY KEY," +
-                    PokemonsEntry.COLUMN_NAME_ID + INT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_ID + TEXT_TYPE + COMMA_SEP +
                     PokemonsEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
                     PokemonsEntry.COLUMN_NAME_ICONURL + TEXT_TYPE + COMMA_SEP +
                     PokemonsEntry.COLUMN_NAME_URL + TEXT_TYPE + COMMA_SEP +
-                    PokemonsEntry.COLUMN_NAME_TYPE + TEXT_TYPE + " )";
+                    PokemonsEntry.COLUMN_NAME_ICON + BLOB_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_TYPE1 + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_TYPE2 + TEXT_TYPE + " )";
 
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
@@ -42,7 +45,9 @@ public final class PokemonsContract {
         public static final String COLUMN_NAME_NAME = "name";
         public static final String COLUMN_NAME_ICONURL = "iconurl";
         public static final String COLUMN_NAME_URL = "url";
-        public static final String COLUMN_NAME_TYPE = "img";
+        public static final String COLUMN_NAME_TYPE1 = "type1";
+        public static final String COLUMN_NAME_TYPE2 = "type2";
+        public static final String COLUMN_NAME_ICON = "icon";
     }
 
     public PokemonsContract(SQLiteOpenHelper dbHelper) {
@@ -51,12 +56,16 @@ public final class PokemonsContract {
 
     public long insert(Pokemon Pokemon){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put(PokemonsEntry.COLUMN_NAME_ID, Pokemon.getId());
         values.put(PokemonsEntry.COLUMN_NAME_NAME, Pokemon.getName());
         values.put(PokemonsEntry.COLUMN_NAME_ICONURL, Pokemon.getIconUrl());
         values.put(PokemonsEntry.COLUMN_NAME_URL, Pokemon.getUrl());
+        values.put(PokemonsEntry.COLUMN_NAME_TYPE1, Pokemon.getType1());
+        values.put(PokemonsEntry.COLUMN_NAME_TYPE2, Pokemon.getType2());
+        if (Pokemon.getIcon() != null) {
+            values.put(PokemonsEntry.COLUMN_NAME_ICON, BitmapConverter.getBytes(Pokemon.getIcon()));
+        }
 
         long newRowId;
         newRowId = db.insert(TABLE_NAME, null, values);
@@ -75,7 +84,9 @@ public final class PokemonsContract {
                 PokemonsEntry.COLUMN_NAME_NAME,
                 PokemonsEntry.COLUMN_NAME_ICONURL,
                 PokemonsEntry.COLUMN_NAME_URL,
-                PokemonsEntry.COLUMN_NAME_TYPE
+                PokemonsEntry.COLUMN_NAME_TYPE1,
+                PokemonsEntry.COLUMN_NAME_TYPE2,
+                PokemonsEntry.COLUMN_NAME_ICON
         };
 
         //Sort order
@@ -95,10 +106,17 @@ public final class PokemonsContract {
 
         while (cur.moveToNext()){
             Pokemon pokemon = new Pokemon();
-            pokemon.setId(cur.getInt(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ID)));
+            pokemon.setId(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ID)));
             pokemon.setName(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_NAME)));
             pokemon.setIconUrl(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICONURL)));
             pokemon.setUrl(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_URL)));
+            pokemon.setType1(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE1)));
+            pokemon.setType2(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE2)));
+            if (cur.getBlob(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)) != null){
+                pokemon.setIcon((BitmapConverter.getImage(cur.getBlob(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)))));
+            }
+
+            //pokemon.setUrl(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)));
             //pokemon.setType(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE)));
             Pokemons.add(pokemon);
         }
@@ -107,6 +125,9 @@ public final class PokemonsContract {
         db.close();
         return Pokemons;
     }
+
+
+
 
     public void delete(int id){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -133,10 +154,12 @@ public final class PokemonsContract {
         String[] columns = {
                 PokemonsEntry._ID,
                 PokemonsEntry.COLUMN_NAME_ID,
+                PokemonsEntry.COLUMN_NAME_NAME,
                 PokemonsEntry.COLUMN_NAME_ICONURL,
                 PokemonsEntry.COLUMN_NAME_URL,
-                PokemonsEntry.COLUMN_NAME_NAME,
-                PokemonsEntry.COLUMN_NAME_TYPE
+                PokemonsEntry.COLUMN_NAME_TYPE1,
+                PokemonsEntry.COLUMN_NAME_TYPE2,
+                PokemonsEntry.COLUMN_NAME_ICON
         };
 
         Cursor cur = db.query(
@@ -151,11 +174,13 @@ public final class PokemonsContract {
         Pokemon pokemon = null;
         if(cur.moveToNext()){
             pokemon = new Pokemon();
-            pokemon.setId(cur.getInt(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ID)));
+            pokemon.setId(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ID)));
             pokemon.setName(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_NAME)));
             pokemon.setIconUrl(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICONURL)));
             pokemon.setUrl(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_URL)));
-            //pokemon.setType(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE)));
+            pokemon.setType1(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE1)));
+            pokemon.setType2(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE2)));
+            pokemon.setIcon((BitmapConverter.getImage(cur.getBlob(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)))));
         }
         cur.close();
         db.close();

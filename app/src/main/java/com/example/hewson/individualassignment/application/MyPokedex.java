@@ -1,4 +1,4 @@
-package com.example.hewson.individualassignment;
+package com.example.hewson.individualassignment.application;
 
 import android.app.Application;
 import android.content.Context;
