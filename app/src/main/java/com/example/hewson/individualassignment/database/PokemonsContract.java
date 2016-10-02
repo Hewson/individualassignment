@@ -33,12 +33,24 @@ public final class PokemonsContract {
                     PokemonsEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
                     PokemonsEntry.COLUMN_NAME_ICONURL + TEXT_TYPE + COMMA_SEP +
                     PokemonsEntry.COLUMN_NAME_URL + TEXT_TYPE + COMMA_SEP +
-                    PokemonsEntry.COLUMN_NAME_ICON + BLOB_TYPE + COMMA_SEP +
                     PokemonsEntry.COLUMN_NAME_TYPE1 + TEXT_TYPE + COMMA_SEP +
-                    PokemonsEntry.COLUMN_NAME_TYPE2 + TEXT_TYPE + " )";
+                    PokemonsEntry.COLUMN_NAME_TYPE2 + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_WEIGHT + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_HEIGHT + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_LISTMOVES + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_LEARNTYPE + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_LEVELLEARNED + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_ICON + BLOB_TYPE + " )";
 
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
+
+    public void restartDB() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL(PokemonsContract.SQL_CREATE_ENTRIES);
+    }
+
 
     public abstract class PokemonsEntry implements BaseColumns {
         public static final String COLUMN_NAME_ID = "id";
@@ -47,6 +59,11 @@ public final class PokemonsContract {
         public static final String COLUMN_NAME_URL = "url";
         public static final String COLUMN_NAME_TYPE1 = "type1";
         public static final String COLUMN_NAME_TYPE2 = "type2";
+        public static final String COLUMN_NAME_WEIGHT = "weight";
+        public static final String COLUMN_NAME_HEIGHT = "height";
+        public static final String COLUMN_NAME_LISTMOVES = "listmoves";
+        public static final String COLUMN_NAME_LEARNTYPE = "learntype";
+        public static final String COLUMN_NAME_LEVELLEARNED = "levellearned";
         public static final String COLUMN_NAME_ICON = "icon";
     }
 
@@ -63,10 +80,14 @@ public final class PokemonsContract {
         values.put(PokemonsEntry.COLUMN_NAME_URL, Pokemon.getUrl());
         values.put(PokemonsEntry.COLUMN_NAME_TYPE1, Pokemon.getType1());
         values.put(PokemonsEntry.COLUMN_NAME_TYPE2, Pokemon.getType2());
+        values.put(PokemonsEntry.COLUMN_NAME_WEIGHT, Pokemon.getWeight());
+        values.put(PokemonsEntry.COLUMN_NAME_HEIGHT, Pokemon.getHeight());
+        values.put(PokemonsEntry.COLUMN_NAME_LISTMOVES, Pokemon.getListMoves());
+        values.put(PokemonsEntry.COLUMN_NAME_LEARNTYPE, Pokemon.getLearnType());
+        values.put(PokemonsEntry.COLUMN_NAME_LEVELLEARNED, Pokemon.getLevelLearned());
         if (Pokemon.getIcon() != null) {
             values.put(PokemonsEntry.COLUMN_NAME_ICON, BitmapConverter.getBytes(Pokemon.getIcon()));
         }
-
         long newRowId;
         newRowId = db.insert(TABLE_NAME, null, values);
         db.close();
@@ -86,6 +107,12 @@ public final class PokemonsContract {
                 PokemonsEntry.COLUMN_NAME_URL,
                 PokemonsEntry.COLUMN_NAME_TYPE1,
                 PokemonsEntry.COLUMN_NAME_TYPE2,
+                PokemonsEntry.COLUMN_NAME_TYPE2,
+                PokemonsEntry.COLUMN_NAME_WEIGHT,
+                PokemonsEntry.COLUMN_NAME_HEIGHT,
+                PokemonsEntry.COLUMN_NAME_LISTMOVES,
+                PokemonsEntry.COLUMN_NAME_LEARNTYPE,
+                PokemonsEntry.COLUMN_NAME_LEVELLEARNED,
                 PokemonsEntry.COLUMN_NAME_ICON
         };
 
@@ -112,6 +139,11 @@ public final class PokemonsContract {
             pokemon.setUrl(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_URL)));
             pokemon.setType1(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE1)));
             pokemon.setType2(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE2)));
+            pokemon.setWeight(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_WEIGHT)));
+            pokemon.setHeight(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_HEIGHT)));
+            pokemon.setListMoves(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_LISTMOVES)));
+            pokemon.setLearnType(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_LEARNTYPE)));
+            pokemon.setLevelLearned(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_LEVELLEARNED)));
             if (cur.getBlob(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)) != null){
                 pokemon.setIcon((BitmapConverter.getImage(cur.getBlob(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)))));
             }
@@ -159,6 +191,12 @@ public final class PokemonsContract {
                 PokemonsEntry.COLUMN_NAME_URL,
                 PokemonsEntry.COLUMN_NAME_TYPE1,
                 PokemonsEntry.COLUMN_NAME_TYPE2,
+                PokemonsEntry.COLUMN_NAME_TYPE2,
+                PokemonsEntry.COLUMN_NAME_WEIGHT,
+                PokemonsEntry.COLUMN_NAME_HEIGHT,
+                PokemonsEntry.COLUMN_NAME_LISTMOVES,
+                PokemonsEntry.COLUMN_NAME_LEARNTYPE,
+                PokemonsEntry.COLUMN_NAME_LEVELLEARNED,
                 PokemonsEntry.COLUMN_NAME_ICON
         };
 
@@ -180,7 +218,14 @@ public final class PokemonsContract {
             pokemon.setUrl(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_URL)));
             pokemon.setType1(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE1)));
             pokemon.setType2(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE2)));
-            pokemon.setIcon((BitmapConverter.getImage(cur.getBlob(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)))));
+            pokemon.setWeight(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_WEIGHT)));
+            pokemon.setHeight(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_HEIGHT)));
+            pokemon.setListMoves(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_LISTMOVES)));
+            pokemon.setLearnType(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_LEARNTYPE)));
+            pokemon.setLevelLearned(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_LEVELLEARNED)));
+            if (cur.getBlob(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)) != null){
+                pokemon.setIcon((BitmapConverter.getImage(cur.getBlob(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)))));
+            }
         }
         cur.close();
         db.close();

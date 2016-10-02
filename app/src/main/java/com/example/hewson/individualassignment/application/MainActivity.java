@@ -9,7 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,6 +41,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PokemonAdapter.ClickListener {
@@ -52,20 +56,26 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
     private Context context;
     private static final String TAG = MainActivity.class.getName();
     private ProgressBar progressBar;
-    private TextView tV;
+    public static final String URL = "https://pokeapi.co/api/v2/pokemon/";
+    public static final String ENDPOINT = "?limit=10";
+    private static String listSeparator = "__,__";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.mytoolbar);
+        setSupportActionBar(myToolbar);
+
         dbHelper = new DBHelper(this);
         pokemonAccess = new PokemonAccess(dbHelper);
+
         pokemonList = new ArrayList<>();
         volleySingleton = VolleySingleton.getInstance();
         imageLoader = volleySingleton.getImageLoader();
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler1);
         progressBar = (ProgressBar) findViewById(R.id.progress);
-        tV = (TextView) findViewById(R.id.loading);
         mAdapter = new PokemonAdapter(this, pokemonList);
         mAdapter.setClickListener(this);
         mRecyclerView.setHasFixedSize(true);
@@ -76,17 +86,50 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
         mRecyclerView.setAdapter(mAdapter);
         if (pokemonAccess.getAll().isEmpty() && isOnline()) {
             Log.d(TAG, "onCreate: " + "doing json request");
-            requestPokemonName("https://pokeapi.co/api/v2/pokemon/?limit=151");
+            Toast.makeText(this, "Please wait for the data to be downloaded...", Toast.LENGTH_SHORT).show();
+            requestPokemonName(URL + ENDPOINT);
             Log.d(TAG, "all pokemon in db after json request: " + pokemonAccess.getAll().toString());
             updateDisplay();
 
         } else {
             Log.d(TAG, "onCreate: " + "loading from db");
+            Toast.makeText(this, "Retrieving Pokedex from database...", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "all pokemon in db: " + pokemonAccess.getAll().toString());
             updateDisplay();
             progressBar.setVisibility(View.GONE);
-            tV.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // action with ID action_refresh was selected
+            case R.id.action_refresh:
+                Toast.makeText(this, "Refreshing! Please wait for the data to be downloaded...", Toast.LENGTH_LONG)
+                        .show();
+                int[] intArray = new int[pokemonAccess.getAll().size()];
+                for (int i = 0; i < pokemonAccess.getAll().size(); i++) {
+                    intArray[i] = i;
+                }
+                pokemonAccess.deleteAll();
+                requestPokemonName(URL + ENDPOINT);
+                updateDisplay();
+                break;
+            case R.id.action_settings:
+                Toast.makeText(this, "You selected Settings", Toast.LENGTH_LONG)
+                        .show();
+                break;
+            default:
+                break;
+        }
+
+        return true;
     }
 
     protected void requestPokemonName(String url) {
@@ -103,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                         String pokeName = capitaliser(pokemonObj.getString("name"));
                         myPokemon.setName(pokeName);
                         myPokemon.setUrl(pokeUrl);
-                        String id = "#" + String.format("%03d", i+1);
+                        String id = "#" + String.format("%03d", i + 1);
                         myPokemon.setId(id);
                         requestPokemonUrl(pokeUrl, myPokemon);
                     }
@@ -132,10 +175,14 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
             public void onResponse(JSONObject response) {
                 try {
                     progressBar.setVisibility(View.VISIBLE);
-                    tV.setVisibility(View.VISIBLE);
-                    JSONObject mySprite = response.getJSONObject("sprites");
-                    String iconUrl = mySprite.getString("front_default");
-                    pokemon.setIconUrl(iconUrl);
+
+                    //parsing height and weight
+                    String height = response.getString("height");
+                    pokemon.setHeight(height);
+                    String weight = response.getString("weight");
+                    pokemon.setWeight(weight);
+
+                    //parsing types
                     JSONArray myTypes = response.getJSONArray("types");
                     int counter = 0;
                     for (int i = myTypes.length() - 1; i >= 0; i--) {
@@ -143,30 +190,58 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                         JSONObject slot = myTypes.getJSONObject(i);
                         JSONObject type = slot.getJSONObject("type");
                         String name = capitaliser(type.getString("name"));
-                        if (counter==1) {
+                        if (counter == 1) {
                             pokemon.setType1(name);
-                        }
-                        else if (counter==2) {
+                        } else if (counter == 2) {
                             pokemon.setType2(name);
-                        }
-                        else {
+                        } else {
 
                         }
                     }
 
+
+                    //parsing moves
+                    JSONArray myMoves = response.getJSONArray("moves");
+                    ArrayList<String> listMoves = new ArrayList<>();
+                    ArrayList<String> listLearnType = new ArrayList<>();
+                    ArrayList<String> listLevelLearned = new ArrayList<>();
+                    for (int i = 0; i < myMoves.length(); i++) {
+                        JSONObject moveNumber = myMoves.getJSONObject(i);
+                        JSONArray version = moveNumber.getJSONArray("version_group_details");
+                        JSONObject versionNumber = version.getJSONObject(0);
+                        JSONObject learnMethod = versionNumber.getJSONObject("move_learn_method");
+                        String learnType = capitaliser(learnMethod.getString("name"));
+                        listLearnType.add(learnType);
+                        String levelLearned = versionNumber.getString("level_learned_at");
+                        listLevelLearned.add(levelLearned);
+                        JSONObject moveObject = moveNumber.getJSONObject("move");
+                        String move = capitaliser(moveObject.getString("name"));
+                        listMoves.add(move);
+
+                        pokemon.setListMoves(convertListToString(listMoves));
+                        pokemon.setLearnType(convertListToString(listLearnType));
+                        pokemon.setLevelLearned(convertListToString(listLevelLearned));
+                    }
+
+                    //parsing icons
+                    JSONObject mySprite = response.getJSONObject("sprites");
+                    String iconUrl = mySprite.getString("front_default");
+                    pokemon.setIconUrl(iconUrl);
                     imageLoader.get(iconUrl, new ImageLoader.ImageListener() {
                         @Override
                         public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                             pokemon.setIcon(response.getBitmap());
                             if (pokemon.getIcon() != null) {
-                                pokemonList.add(pokemon);
                                 pokemonAccess.insertPokemon(pokemon);
+                                Log.d(TAG, "getListMoves: " + pokemonAccess.getAll().get(0).getListMoves());
+                                Log.d(TAG, "getLearnType: " + pokemonAccess.getAll().get(0).getLearnType());
+                                Log.d(TAG, "getLevelLearned: " + pokemonAccess.getAll().get(0).getLevelLearned());
                                 progressBar.setVisibility(View.GONE);
-                                tV.setVisibility(View.GONE);
                             }
                             mAdapter.setPokemon(pokemonAccess.getAll());
                             updateDisplay();
                         }
+
                         @Override
                         public void onErrorResponse(VolleyError error) {
 
@@ -212,17 +287,26 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
         return sb.toString();
     }
 
-    public void viewSpecificPokemon(View view) {
-        Intent intent = new Intent(this, SpecificPokemon.class);
-        startActivity(intent);
-    }
-
     @Override
     public void itemClicked(View v, int position) {
-        startActivity(new Intent(this, SpecificPokemon.class));
+        Intent intent = new Intent(this, SpecificPokemon.class);
+        intent.putExtra("id", position);
+        startActivity(intent);
     }
 
     protected void updateDisplay() {
         mAdapter.notifyDataSetChanged();
     }
+
+    public static String convertListToString(ArrayList<String> listOfStrings) {
+        StringBuffer stringBuffer = new StringBuffer();
+        for (String string : listOfStrings) {
+            stringBuffer.append(string).append(listSeparator);
+        }
+        int lastIndex = stringBuffer.lastIndexOf(listSeparator);
+        stringBuffer.delete(lastIndex, lastIndex + listSeparator.length() + 1);
+        return stringBuffer.toString();
+    }
+
+
 }

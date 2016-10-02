@@ -5,12 +5,14 @@ import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.example.hewson.individualassignment.R;
@@ -21,6 +23,8 @@ import com.example.hewson.individualassignment.network.VolleySingleton;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Hewson Tran on 24/09/2016.
@@ -63,6 +67,8 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         @Override
         public void onClick(View view) {
             clickListener.itemClicked(view, getAdapterPosition());
+            int position = getAdapterPosition();
+            Log.d(TAG, "onClick: " + position);
         }
     }
 

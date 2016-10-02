@@ -40,6 +40,10 @@ public class PokemonAccess implements DbAccess {
         }
     }
 
+    public void deleteAll() {
+        PokemonsContract.restartDB();
+    }
+
     public void deletePokemons(int... ids){
         for(int id : ids){
             PokemonsContract.delete(id);

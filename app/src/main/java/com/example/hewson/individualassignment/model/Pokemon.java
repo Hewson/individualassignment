@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 
 public class Pokemon {
-    private String id, name, iconUrl, url, type1, type2;
+    private String id, name, iconUrl, url, type1, type2, weight, height, listMoves, learnType, levelLearned;
     private Bitmap icon;
 
     public String getId() {
@@ -68,6 +68,46 @@ public class Pokemon {
         this.icon = icon;
     }
 
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public String getListMoves() {
+        return listMoves;
+    }
+
+    public void setListMoves(String listMoves) {
+        this.listMoves = listMoves;
+    }
+
+    public String getLearnType() {
+        return learnType;
+    }
+
+    public void setLearnType(String learnType) {
+        this.learnType = learnType;
+    }
+
+    public String getLevelLearned() {
+        return levelLearned;
+    }
+
+    public void setLevelLearned(String levelLearned) {
+        this.levelLearned = levelLearned;
+    }
+
     public Pokemon() {
 
     }
@@ -92,13 +132,18 @@ public class Pokemon {
 
     @Override
     public String toString() {
-        return "\nPokemon{" +
-                "id=" + id +
+        return "Pokemon{" +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", iconUrl='" + iconUrl + '\'' +
                 ", url='" + url + '\'' +
                 ", type1='" + type1 + '\'' +
                 ", type2='" + type2 + '\'' +
+                ", weight='" + weight + '\'' +
+                ", height='" + height + '\'' +
+                ", listMoves='" + listMoves + '\'' +
+                ", learnType='" + learnType + '\'' +
+                ", levelLearned='" + levelLearned + '\'' +
                 ", icon=" + icon +
                 '}';
     }
