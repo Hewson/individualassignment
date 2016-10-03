@@ -104,7 +104,8 @@
                             android:layout_toRightOf="@+id/typeTag"
                             android:padding="@dimen/padding"
                             android:textColor="@color/icons"
-                            android:textSize="@dimen/text" />
+                            android:textSize="@dimen/text"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/type2"
@@ -112,6 +113,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/margin"
                             android:layout_toRightOf="@+id/type1"
+
                             android:padding="@dimen/padding"
                             android:textColor="@color/icons"
                             android:textSize="@dimen/text" />
@@ -126,6 +128,7 @@
                             android:layout_marginRight="@dimen/margin"
                             android:layout_marginTop="@dimen/margin"
                             android:padding="@dimen/padding"
+
                             android:text="Weight: "
                             android:textAllCaps="true"
                             android:textColor="@color/primary_text"
@@ -194,7 +197,7 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/card1"
                 android:layout_centerVertical="true"
-                android:layout_marginBottom="@dimen/larger_margin"
+                android:layout_marginBottom="3dp"
                 android:layout_marginLeft="@dimen/margin_left_title"
                 android:layout_marginTop="@dimen/larger_margin"
                 android:text="Abilities: "
@@ -267,7 +270,7 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/card2"
                 android:layout_centerVertical="true"
-                android:layout_marginBottom="@dimen/larger_margin"
+                android:layout_marginBottom="3dp"
                 android:layout_marginLeft="@dimen/margin_left_title"
                 android:layout_marginTop="@dimen/larger_margin"
                 android:text="Base Stats: "
@@ -458,7 +461,7 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/card3"
                 android:layout_centerVertical="true"
-                android:layout_marginBottom="@dimen/larger_margin"
+                android:layout_marginBottom="3dp"
                 android:layout_marginLeft="@dimen/margin_left_title"
                 android:layout_marginTop="@dimen/larger_margin"
                 android:text="Moves: "

@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="21dp"
                 android:layout_marginRight="@dimen/margin"
                 android:layout_marginTop="16dp"
                 android:background="@color/primary_dark"
@@ -47,12 +47,12 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="16dp"
                 android:layout_toRightOf="@+id/id"
-                android:background="#FFA000"
+                android:background="#37474F"
                 android:paddingBottom="@dimen/padding"
                 android:paddingLeft="13dp"
                 android:paddingRight="13dp"
                 android:paddingTop="@dimen/padding"
-                android:textColor="@color/primary_text" />
+                android:textColor="@color/icons" />
 
             <ImageView
                 android:id="@+id/thumbnail"
