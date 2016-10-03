@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
     //standard declaration of database constants
-    public static final int DATABASE_VERSION = 92;
+    public static final int DATABASE_VERSION = 93;
     public static final String DATABASE_NAME = "pokedex.db";
 
     //constructor for the DBHelper which instantiates the object
