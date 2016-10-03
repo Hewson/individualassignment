@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
     private static final String TAG = MainActivity.class.getName();
     public static final String URL = "https://pokeapi.co/api/v2/pokemon/";
     public static final String LIMIT = "?limit=";
-    public static final String ENDPOINT = "50";
+    public static final String ENDPOINT = "151";
     public static final String DEFAULT_ICON = "front_default";
     public static final String SHINY_ICON = "front_shiny";
     public static final String BACK_ICON = "back_default";
