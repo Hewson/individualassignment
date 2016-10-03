@@ -1,8 +1,9 @@
 package com.example.hewson.individualassignment.view;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,24 +13,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hewson.individualassignment.R;
-import com.example.hewson.individualassignment.application.MainActivity;
 import com.example.hewson.individualassignment.controller.MoveAdapter;
-import com.example.hewson.individualassignment.controller.PokemonAdapter;
 import com.example.hewson.individualassignment.database.DBHelper;
 import com.example.hewson.individualassignment.database.PokemonAccess;
 import com.example.hewson.individualassignment.model.Pokemon;
 import com.example.hewson.individualassignment.network.VolleySingleton;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.example.hewson.individualassignment.view.MainActivity.BACK_ICON;
+import static com.example.hewson.individualassignment.view.MainActivity.DEFAULT_ICON;
+import static com.example.hewson.individualassignment.view.MainActivity.ENDPOINT;
+import static com.example.hewson.individualassignment.view.MainActivity.LIMIT;
+import static com.example.hewson.individualassignment.view.MainActivity.SHINY_ICON;
+import static com.example.hewson.individualassignment.view.MainActivity.URL;
 
 public class SpecificPokemon extends AppCompatActivity {
     private static final String TAG = SpecificPokemon.class.getName();
@@ -53,6 +56,10 @@ public class SpecificPokemon extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_specific_pokemon);
 
+        //receiving intent
+        Intent intent = getIntent();
+        int id = intent.getIntExtra("id", 1);
+
         //toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -60,25 +67,25 @@ public class SpecificPokemon extends AppCompatActivity {
         //db
         dbHelper = new DBHelper(this);
         pokemonAccess = new PokemonAccess(dbHelper);
+        Pokemon pokemon = pokemonAccess.getAll().get(id);
 
         //recycler view
         moveList = new ArrayList<>();
         volleySingleton = VolleySingleton.getInstance();
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler2);
-        mAdapter = new MoveAdapter(this, myPokemonList);
+        mAdapter = new MoveAdapter(this, myPokemonList, id);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
-        for (int i = 0; i < 10; i++) {
-            moveList.add(pokemonAccess.getAll().get(i).getHeight());
-        }
-        mAdapter.setMoves(moveList);
 
-        Intent intent = getIntent();
-        int id = intent.getIntExtra("id", 1);
-        Pokemon pokemon = pokemonAccess.getAll().get(id);
+        moveList = convertStringToList(pokemon.getListMoves());
+        mAdapter.setMoves(moveList);
+        int numPokemon = Integer.parseInt(ENDPOINT);
+        updateDisplay();
+//        mAdapter.setMoves(moveList);
+
 
         name = (TextView) findViewById(R.id.name);
         name.setText(pokemon.getName());
@@ -90,10 +97,128 @@ public class SpecificPokemon extends AppCompatActivity {
 
         type1 = (TextView) findViewById(R.id.type1);
         type1.setText(pokemon.getType1());
+        switch (pokemon.getType1()) {
+            case "Normal":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.normal));
+                break;
+            case "Fire":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.fire));
+                break;
+            case "Water":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.water));
+                break;
+            case "Electric":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.electric));
+                break;
+            case "Grass":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.grass));
+                break;
+            case "Ice":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.normal));
+                break;
+            case "Fighting":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.fighting));
+                break;
+            case "Poison":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.poison));
+                break;
+            case "Ground":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.ground));
+                break;
+            case "Flying":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.flying));
+                break;
+            case "Psychic":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.psychic));
+                break;
+            case "Bug":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.bug));
+                break;
+            case "Rock":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.rock));
+                break;
+            case "Ghost":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.ghost));
+                break;
+            case "Dragon":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.dragon));
+                break;
+            case "Dark":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.dark));
+                break;
+            case "Steel":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.steel));
+                break;
+            case "Fairy":
+                type1.setTextColor(ContextCompat.getColor(this, R.color.fairy));
+                break;
+            default:
+                break;
+        }
+        
+        
         type2 = (TextView) findViewById(R.id.type2);
         type2.setVisibility(View.GONE);
-        if (pokemon.getType2() != null){
+        if (pokemon.getType2() != null) {
             type2.setText(pokemon.getType2());
+            switch (pokemon.getType2()) {
+                case "Normal":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.normal));
+                    break;
+                case "Fire":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.fire));
+                    break;
+                case "Water":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.water));
+                    break;
+                case "Electric":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.electric));
+                    break;
+                case "Grass":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.grass));
+                    break;
+                case "Ice":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.normal));
+                    break;
+                case "Fighting":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.fighting));
+                    break;
+                case "Poison":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.poison));
+                    break;
+                case "Ground":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.ground));
+                    break;
+                case "Flying":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.flying));
+                    break;
+                case "Psychic":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.psychic));
+                    break;
+                case "Bug":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.bug));
+                    break;
+                case "Rock":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.rock));
+                    break;
+                case "Ghost":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.ghost));
+                    break;
+                case "Dragon":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.dragon));
+                    break;
+                case "Dark":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.dark));
+                    break;
+                case "Steel":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.steel));
+                    break;
+                case "Fairy":
+                    type2.setTextColor(ContextCompat.getColor(this, R.color.fairy));
+                    break;
+                default:
+                    break;
+            }
             type2.setVisibility(View.VISIBLE);
         }
 
@@ -101,22 +226,10 @@ public class SpecificPokemon extends AppCompatActivity {
         icon.setImageBitmap(pokemon.getIcon());
 
         weight = (TextView) findViewById(R.id.weight);
-        weight.setText("Weight: " + pokemon.getWeight());
+        weight.setText(pokemon.getWeight());
 
         height = (TextView) findViewById(R.id.height);
-        height.setText("Height: " + pokemon.getHeight());
-
-        /*listMoves = (TextView) findViewById(R.id.listMoves);
-        ArrayList<String> arrayMoves = convertStringToList(pokemon.getListMoves());
-        listMoves.setText("Moves: " + arrayMoves);
-
-        learnType = (TextView) findViewById(R.id.learnType);
-        ArrayList<String> arrayLearnType = convertStringToList(pokemon.getLearnType());
-        learnType.setText("Method of learning: " + arrayLearnType);
-
-        levelLearned = (TextView) findViewById(R.id.levelLearned);
-        ArrayList<String> arrayLevelLearned = convertStringToList(pokemon.getLevelLearned());
-        levelLearned.setText("Level Learned: " + arrayLevelLearned);*/
+        height.setText(pokemon.getHeight());
 
         abilityTag = (TextView) findViewById(R.id.abilityTag);
 
@@ -143,22 +256,22 @@ public class SpecificPokemon extends AppCompatActivity {
         }
 
         hp = (TextView) findViewById(R.id.hp);
-        hp.setText("HP: " + pokemon.getHp());
+        hp.setText(pokemon.getHp());
 
         speed = (TextView) findViewById(R.id.speed);
-        speed.setText("Speed: " + pokemon.getSpeed());
+        speed.setText(pokemon.getSpeed());
 
         sdefense = (TextView) findViewById(R.id.sdefense);
-        sdefense.setText("Special Defense: " + pokemon.getSdefense());
+        sdefense.setText(pokemon.getSdefense());
 
         sattack = (TextView) findViewById(R.id.sattack);
-        sattack.setText("Special Attack: " + pokemon.getSattack());
+        sattack.setText(pokemon.getSattack());
 
         defense = (TextView) findViewById(R.id.defense);
-        defense.setText("Defense: " + pokemon.getDefense());
+        defense.setText(pokemon.getDefense());
 
         attack = (TextView) findViewById(R.id.attack);
-        attack.setText("Attack: " + pokemon.getAttack());
+        attack.setText(pokemon.getAttack());
     }
 
     @Override
@@ -169,11 +282,24 @@ public class SpecificPokemon extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        MainActivity mainActivity = new MainActivity();
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                Toast.makeText(this, "Refreshing", Toast.LENGTH_LONG)
-                        .show();
+                Toast.makeText(this, "Please go back to the main page to refresh", Toast.LENGTH_LONG).show();
                 break;
+
+            case R.id.shiny_refresh:
+                Toast.makeText(this, "Please go back to the main page to refresh", Toast.LENGTH_LONG).show();
+                break;
+
+            case R.id.back_refresh:
+                Toast.makeText(this, "Please go back to the main page to refresh", Toast.LENGTH_LONG).show();
+                break;
+
+            case R.id.default_refresh:
+                Toast.makeText(this, "Please go back to the main page to refresh", Toast.LENGTH_LONG).show();
+                break;
+
             case R.id.action_settings:
                 Toast.makeText(this, "You selected Settings", Toast.LENGTH_LONG)
                         .show();

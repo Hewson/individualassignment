@@ -8,4 +8,5 @@
     <dimen name="margin">5dp</dimen>
     <dimen name="larger_margin">7dp</dimen>
     <dimen name="margin_left_title">18dp</dimen>
+    <dimen name="text">15sp</dimen>
 </resources>

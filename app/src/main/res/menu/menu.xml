@@ -9,6 +9,18 @@
         android:title="@string/refresh"
         app:showAsAction="ifRoom" />
 
+    <item android:id="@+id/shiny_refresh"
+        android:title="Shiny Icons"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/back_refresh"
+        android:title="Back Icons"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/default_refresh"
+        android:title="Reset Icons"
+        app:showAsAction="never" />
+
     <item android:id="@+id/action_settings"
         android:title="@string/Settings"
         app:showAsAction="never" />

@@ -1,4 +1,4 @@
-package com.example.hewson.individualassignment.application;
+package com.example.hewson.individualassignment.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -25,31 +24,29 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.example.hewson.individualassignment.controller.PokemonAdapter;
 import com.example.hewson.individualassignment.R;
 import com.example.hewson.individualassignment.database.DBHelper;
 import com.example.hewson.individualassignment.database.PokemonAccess;
 import com.example.hewson.individualassignment.model.Pokemon;
 import com.example.hewson.individualassignment.network.VolleySingleton;
-import com.example.hewson.individualassignment.view.PokemonDivider;
-import com.example.hewson.individualassignment.view.SpecificPokemon;
 
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PokemonAdapter.ClickListener {
     private static final String TAG = MainActivity.class.getName();
     public static final String URL = "https://pokeapi.co/api/v2/pokemon/";
-    public static final String ENDPOINT = "?limit=10";
+    public static final String LIMIT = "?limit=";
+    public static final String ENDPOINT = "12";
+    public static final String DEFAULT_ICON = "front_default";
+    public static final String SHINY_ICON = "front_shiny";
+    public static final String BACK_ICON = "back_default";
     private static String listSeparator = "__,__";
 
     private List<Pokemon> pokemonList;
@@ -99,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
         if (pokemonAccess.getAll().isEmpty() && isOnline()) {
             Log.d(TAG, "onCreate: " + "doing json request");
             Toast.makeText(this, "Please wait for the data to be downloaded...", Toast.LENGTH_SHORT).show();
-            requestPokemonName(URL + ENDPOINT);
+            requestPokemonName(URL + LIMIT + ENDPOINT, DEFAULT_ICON);
             Log.d(TAG, "all pokemon in db after json request: " + pokemonAccess.getAll().toString());
             updateDisplay();
 
@@ -121,18 +118,34 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // action with ID action_refresh was selected
             case R.id.action_refresh:
-                Toast.makeText(this, "Refreshing! Please wait for the data to be downloaded...", Toast.LENGTH_LONG)
-                        .show();
-                int[] intArray = new int[pokemonAccess.getAll().size()];
-                for (int i = 0; i < pokemonAccess.getAll().size(); i++) {
-                    intArray[i] = i;
-                }
+                Toast.makeText(this, "Refreshing! Please wait for the data to be downloaded...", Toast.LENGTH_LONG).show();
                 pokemonAccess.deleteAll();
-                requestPokemonName(URL + ENDPOINT);
+                requestPokemonName(URL + LIMIT + ENDPOINT, DEFAULT_ICON);
                 updateDisplay();
                 break;
+
+            case R.id.shiny_refresh:
+                Toast.makeText(this, "Refreshing! Please wait for the data to be downloaded...", Toast.LENGTH_LONG).show();
+                pokemonAccess.deleteAll();
+                requestPokemonName(URL + LIMIT + ENDPOINT, SHINY_ICON);
+                updateDisplay();
+                break;
+
+            case R.id.back_refresh:
+                Toast.makeText(this, "Refreshing! Please wait for the data to be downloaded...", Toast.LENGTH_LONG).show();
+                pokemonAccess.deleteAll();
+                requestPokemonName(URL + LIMIT + ENDPOINT, BACK_ICON);
+                updateDisplay();
+                break;
+
+            case R.id.default_refresh:
+                Toast.makeText(this, "Refreshing! Please wait for the data to be downloaded...", Toast.LENGTH_LONG).show();
+                pokemonAccess.deleteAll();
+                requestPokemonName(URL + LIMIT + ENDPOINT, DEFAULT_ICON);
+                updateDisplay();
+                break;
+
             case R.id.action_settings:
                 Toast.makeText(this, "You selected Settings", Toast.LENGTH_LONG)
                         .show();
@@ -144,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
         return true;
     }
 
-    protected void requestPokemonName(String url) {
+    protected void requestPokemonName(String url, final String iconType) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -160,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                         myPokemon.setUrl(pokeUrl);
                         String id = "#" + String.format("%03d", i + 1);
                         myPokemon.setId(id);
-                        requestPokemonUrl(pokeUrl, myPokemon);
+                        requestPokemonUrl(pokeUrl, myPokemon, iconType);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -181,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
         VolleySingleton.getInstance().getRequestQueue().add(jsonObjReq);
     }
 
-    public void requestPokemonUrl(String pokeUrl, final Pokemon pokemon) {
+    public void requestPokemonUrl(String pokeUrl, final Pokemon pokemon, final String iconType) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, pokeUrl, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -280,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
 
                     //parsing icons
                     JSONObject mySprite = response.getJSONObject("sprites");
-                    String iconUrl = mySprite.getString("front_default");
+                    String iconUrl = mySprite.getString(iconType);
                     pokemon.setIconUrl(iconUrl);
                     imageLoader.get(iconUrl, new ImageLoader.ImageListener() {
                         @Override
@@ -288,7 +301,6 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                             pokemon.setIcon(response.getBitmap());
                             if (pokemon.getIcon() != null) {
                                 pokemonAccess.insertPokemon(pokemon);
-                                Log.d(TAG, "inserting: "+ pokemon.toString());
                                 progressBar.setVisibility(View.GONE);
                             }
                             mAdapter.setPokemon(pokemonAccess.getAll());

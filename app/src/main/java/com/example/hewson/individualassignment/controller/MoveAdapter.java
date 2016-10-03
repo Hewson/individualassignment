@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
+import static com.example.hewson.individualassignment.view.SpecificPokemon.convertStringToList;
 
 /**
  * Created by Hewson Tran on 3/10/2016.
@@ -25,20 +26,24 @@ import static android.content.ContentValues.TAG;
 
 public class MoveAdapter extends RecyclerView.Adapter<MoveAdapter.ViewHolder> {
     private List<Pokemon> myPokemonList = new ArrayList<>();
-    private List<String> moveList = new ArrayList<>();
+    private List<String> moveList;
+    List<String> levelList;
+    List<String> tutorList;
     private LayoutInflater inflater;
     private VolleySingleton volleySingleton;
     private Context context;
     private DBHelper dbHelper;
     private PokemonAccess pokemonAccess;
+    int id;
 
-    public MoveAdapter(Context context, List<Pokemon> dataset) {
+    public MoveAdapter(Context context, List<Pokemon> dataset, int id) {
         dbHelper = new DBHelper(context);
         pokemonAccess = new PokemonAccess(dbHelper);
         inflater = LayoutInflater.from(context);
         volleySingleton = VolleySingleton.getInstance();
         this.context = context;
         this.myPokemonList = pokemonAccess.getAll();
+        this.id = id;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -71,13 +76,14 @@ public class MoveAdapter extends RecyclerView.Adapter<MoveAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final MoveAdapter.ViewHolder holder, int position) {
-        Pokemon pokemon = myPokemonList.get(position);
-        Log.d(TAG, "onBindViewHolder: " + pokemon);
-        holder.move.setText("nothing");
-        holder.level.setText("something");
-        holder.tutor.setText("tutor");
-        //set stuff
-        //holder.id.setText(pokemon.getId());
+        Pokemon pokemon = myPokemonList.get(id);
+        moveList = convertStringToList(pokemon.getListMoves());
+        levelList = convertStringToList(pokemon.getLevelLearned());
+        tutorList = convertStringToList(pokemon.getLearnType());
+
+        holder.move.setText(moveList.get(position));
+        holder.level.setText(levelList.get(position));
+        holder.tutor.setText(tutorList.get(position));
     }
 
     @Override

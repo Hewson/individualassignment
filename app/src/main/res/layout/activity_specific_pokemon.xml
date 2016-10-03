@@ -27,7 +27,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -36,7 +36,20 @@
                 android:layout_marginTop="@dimen/larger_margin"
                 android:textColor="@color/primary_dark"
                 android:textSize="25sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="@dimen/larger_margin"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="@dimen/larger_margin"
+                android:layout_toRightOf="@id/id"
+                android:textColor="@color/primary_dark"
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/card1"
@@ -54,63 +67,116 @@
                     android:layout_gravity="center"
                     android:padding="@dimen/padding">
 
-                    <TextView
-                        android:id="@+id/id"
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding"
-                        android:textColor="@color/primary_text" />
+                        android:layout_centerVertical="true">
 
-                    <TextView
-                        android:id="@+id/typeTag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/id"
-                        android:padding="@dimen/padding"
-                        android:text="Type(s): "
-                        android:textColor="@color/primary_text" />
+                        <TextView
+                            android:id="@+id/typeTag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginBottom="@dimen/margin"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="@dimen/margin"
+                            android:layout_marginTop="@dimen/margin"
+                            android:padding="@dimen/padding"
+                            android:text="Types: "
+                            android:textAllCaps="true"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/text"
+                            android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/type1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/id"
-                        android:layout_toRightOf="@+id/typeTag"
-                        android:padding="@dimen/padding"
-                        android:textColor="@color/primary_text" />
+                        <TextView
+                            android:id="@+id/type1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin"
+                            android:layout_marginLeft="11dp"
+                            android:layout_marginRight="@dimen/margin"
+                            android:layout_marginTop="@dimen/margin"
+                            android:layout_toRightOf="@+id/typeTag"
+                            android:padding="@dimen/padding"
+                            android:textColor="@color/icons"
+                            android:textSize="@dimen/text" />
 
-                    <TextView
-                        android:id="@+id/type2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/id"
-                        android:layout_toRightOf="@+id/type1"
-                        android:padding="@dimen/padding"
-                        android:textColor="@color/primary_text" />
+                        <TextView
+                            android:id="@+id/type2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin"
+                            android:layout_toRightOf="@+id/type1"
+                            android:padding="@dimen/padding"
+                            android:textColor="@color/icons"
+                            android:textSize="@dimen/text" />
 
-                    <TextView
-                        android:id="@+id/weight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/typeTag"
-                        android:padding="@dimen/padding"
-                        android:textColor="@color/primary_text" />
+                        <TextView
+                            android:id="@+id/weightTag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/typeTag"
+                            android:layout_marginBottom="@dimen/margin"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="@dimen/margin"
+                            android:layout_marginTop="@dimen/margin"
+                            android:padding="@dimen/padding"
+                            android:text="Weight: "
+                            android:textAllCaps="true"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/text"
+                            android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/height"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/weight"
-                        android:padding="@dimen/padding"
-                        android:textColor="@color/primary_text" />
+                        <TextView
+                            android:id="@+id/weight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/typeTag"
+                            android:layout_margin="@dimen/margin"
+                            android:layout_toRightOf="@id/weightTag"
+                            android:padding="@dimen/padding"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/text" />
+
+                        <TextView
+                            android:id="@+id/heightTag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/weightTag"
+                            android:layout_marginBottom="@dimen/margin"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="@dimen/margin"
+                            android:layout_marginTop="@dimen/margin"
+                            android:padding="@dimen/padding"
+                            android:text="Height: "
+                            android:textAllCaps="true"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/text"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/height"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/weightTag"
+                            android:layout_marginBottom="@dimen/margin"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="@dimen/margin"
+                            android:layout_marginTop="@dimen/margin"
+                            android:layout_toRightOf="@id/heightTag"
+                            android:padding="@dimen/padding"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/text" />
+
+                    </RelativeLayout>
 
                     <ImageView
                         android:id="@+id/icon"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginRight="20dp"
                         android:textColor="@color/primary_text"></ImageView>
 
                 </RelativeLayout>
@@ -144,36 +210,48 @@
                     android:layout_height="match_parent"
                     android:padding="@dimen/padding">
 
-                    <TextView
-                        android:id="@+id/ability1"
+                    <RelativeLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_margin="@dimen/margin"
-                        android:padding="@dimen/padding"
-                        android:textColor="@color/primary_text" />
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true">
 
-                    <TextView
-                        android:id="@+id/ability2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:layout_margin="@dimen/margin"
-                        android:layout_toRightOf="@id/ability1"
-                        android:padding="@dimen/padding"
-                        android:textColor="@color/primary_text" />
+                        <TextView
+                            android:id="@+id/ability1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_margin="@dimen/margin"
+                            android:background="#29B6F6"
+                            android:padding="@dimen/padding"
+                            android:textColor="@color/icons"
+                            android:textSize="@dimen/text" />
 
-                    <TextView
-                        android:id="@+id/ability3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:layout_margin="@dimen/margin"
-                        android:layout_toRightOf="@id/ability2"
-                        android:padding="@dimen/padding"
-                        android:textColor="@color/primary_text" />
+                        <TextView
+                            android:id="@+id/ability2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_margin="@dimen/margin"
+                            android:layout_toRightOf="@id/ability1"
+                            android:background="#FF7043"
+                            android:padding="@dimen/padding"
+                            android:textColor="@color/icons"
+                            android:textSize="@dimen/text" />
 
+                        <TextView
+                            android:id="@+id/ability3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_margin="@dimen/margin"
+                            android:layout_toRightOf="@id/ability2"
+                            android:background="#AB47BC"
+                            android:padding="@dimen/padding"
+                            android:textColor="@color/icons"
+                            android:textSize="@dimen/text" />
+
+                    </RelativeLayout>
                 </RelativeLayout>
 
             </android.support.v7.widget.CardView>
@@ -206,57 +284,164 @@
                     android:padding="@dimen/padding">
 
                     <TextView
+                        android:id="@+id/hpTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="@dimen/margin"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="@dimen/margin"
+                        android:layout_marginTop="@dimen/margin"
+                        android:padding="@dimen/padding"
+                        android:text="HP:"
+                        android:textAllCaps="true"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/text"
+                        android:textStyle="bold" />
+
+                    <TextView
                         android:id="@+id/hp"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/margin"
+                        android:layout_alignTop="@id/hpTag"
+                        android:layout_toRightOf="@id/hpTag"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="@dimen/text" />
+
+                    <TextView
+                        android:id="@+id/speedTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/hpTag"
+                        android:layout_marginBottom="@dimen/margin"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="@dimen/margin"
+                        android:layout_marginTop="@dimen/margin"
+                        android:padding="@dimen/padding"
+                        android:text="Speed:"
+                        android:textAllCaps="true"
                         android:textColor="@color/primary_text"
-                        android:padding="@dimen/padding" />
+                        android:textSize="@dimen/text"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/speed"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_alignTop="@id/speedTag"
                         android:layout_below="@id/hp"
-                        android:layout_margin="@dimen/margin"
+                        android:layout_toRightOf="@id/speedTag"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="@dimen/text" />
+
+                    <TextView
+                        android:id="@+id/sDefenseTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/speedTag"
+                        android:layout_marginBottom="@dimen/margin"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="@dimen/margin"
+                        android:layout_marginTop="@dimen/margin"
+                        android:padding="@dimen/padding"
+                        android:text="Special Defense:"
+                        android:textAllCaps="true"
                         android:textColor="@color/primary_text"
-                        android:padding="@dimen/padding" />
+                        android:textSize="@dimen/text"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/sdefense"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_alignTop="@id/sDefenseTag"
                         android:layout_below="@id/speed"
-                        android:layout_margin="@dimen/margin"
+                        android:layout_toRightOf="@id/sDefenseTag"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="@dimen/text" />
+
+                    <TextView
+                        android:id="@+id/sAttackTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/sDefenseTag"
+                        android:layout_marginBottom="@dimen/margin"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="@dimen/margin"
+                        android:layout_marginTop="@dimen/margin"
+                        android:padding="@dimen/padding"
+                        android:text="Special Attack:"
+                        android:textAllCaps="true"
                         android:textColor="@color/primary_text"
-                        android:padding="@dimen/padding" />
+                        android:textSize="@dimen/text"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/sattack"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_alignTop="@id/sAttackTag"
                         android:layout_below="@id/sdefense"
-                        android:layout_margin="@dimen/margin"
+                        android:layout_toRightOf="@id/sAttackTag"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="@dimen/text" />
+
+                    <TextView
+                        android:id="@+id/defenseTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/sAttackTag"
+                        android:layout_marginBottom="@dimen/margin"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="@dimen/margin"
+                        android:layout_marginTop="@dimen/margin"
+                        android:padding="@dimen/padding"
+                        android:text="Defense:"
+                        android:textAllCaps="true"
                         android:textColor="@color/primary_text"
-                        android:padding="@dimen/padding" />
+                        android:textSize="@dimen/text"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/defense"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_alignTop="@id/defenseTag"
                         android:layout_below="@id/sattack"
-                        android:layout_margin="@dimen/margin"
+                        android:layout_toRightOf="@id/defenseTag"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="@dimen/text" />
+
+                    <TextView
+                        android:id="@+id/attackTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/defenseTag"
+                        android:layout_marginBottom="@dimen/margin"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginRight="@dimen/margin"
+                        android:layout_marginTop="@dimen/margin"
+                        android:padding="@dimen/padding"
+                        android:text="Attack:"
+                        android:textAllCaps="true"
                         android:textColor="@color/primary_text"
-                        android:padding="@dimen/padding" />
+                        android:textSize="@dimen/text"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/attack"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_alignTop="@id/attackTag"
                         android:layout_below="@id/defense"
-                        android:layout_margin="@dimen/margin"
-                        android:textColor="@color/primary_text"
-                        android:padding="@dimen/padding" />
+                        android:layout_toRightOf="@+id/attackTag"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="@dimen/text" />
 
                 </RelativeLayout>
 
@@ -277,8 +462,8 @@
                 android:textStyle="bold" />
 
             <android.support.v7.widget.RecyclerView
-                android:layout_width="match_parent"
                 android:id="@+id/recycler2"
+                android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_below="@id/movesTag"
                 android:scrollbars="vertical">
