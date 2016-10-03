@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 
 public class Pokemon {
-    private String id, name, iconUrl, url, type1, type2, weight, height, listMoves, learnType, levelLearned;
+    private String id, name, iconUrl, url, type1, type2, weight, height, listMoves, learnType, levelLearned, ability1, ability2, ability3, hp, speed, sdefense, sattack, defense, attack;
     private Bitmap icon;
 
     public String getId() {
@@ -108,6 +108,78 @@ public class Pokemon {
         this.levelLearned = levelLearned;
     }
 
+    public String getAbility1() {
+        return ability1;
+    }
+
+    public void setAbility1(String ability1) {
+        this.ability1 = ability1;
+    }
+
+    public String getAbility2() {
+        return ability2;
+    }
+
+    public void setAbility2(String ability2) {
+        this.ability2 = ability2;
+    }
+
+    public String getAbility3() {
+        return ability3;
+    }
+
+    public void setAbility3(String ability3) {
+        this.ability3 = ability3;
+    }
+
+    public String getHp() {
+        return hp;
+    }
+
+    public void setHp(String hp) {
+        this.hp = hp;
+    }
+
+    public String getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(String speed) {
+        this.speed = speed;
+    }
+
+    public String getSdefense() {
+        return sdefense;
+    }
+
+    public void setSdefense(String sdefense) {
+        this.sdefense = sdefense;
+    }
+
+    public String getSattack() {
+        return sattack;
+    }
+
+    public void setSattack(String sattack) {
+        this.sattack = sattack;
+    }
+
+    public String getDefense() {
+        return defense;
+    }
+
+    public void setDefense(String defense) {
+        this.defense = defense;
+    }
+
+    public String getAttack() {
+        return attack;
+    }
+
+    public void setAttack(String attack) {
+        this.attack = attack;
+    }
+
     public Pokemon() {
 
     }
@@ -144,6 +216,15 @@ public class Pokemon {
                 ", listMoves='" + listMoves + '\'' +
                 ", learnType='" + learnType + '\'' +
                 ", levelLearned='" + levelLearned + '\'' +
+                ", ability1='" + ability1 + '\'' +
+                ", ability2='" + ability2 + '\'' +
+                ", ability3='" + ability3 + '\'' +
+                ", hp='" + hp + '\'' +
+                ", speed='" + speed + '\'' +
+                ", sdefense='" + sdefense + '\'' +
+                ", sattack='" + sattack + '\'' +
+                ", defense='" + defense + '\'' +
+                ", attack='" + attack + '\'' +
                 ", icon=" + icon +
                 '}';
     }

@@ -40,6 +40,15 @@ public final class PokemonsContract {
                     PokemonsEntry.COLUMN_NAME_LISTMOVES + TEXT_TYPE + COMMA_SEP +
                     PokemonsEntry.COLUMN_NAME_LEARNTYPE + TEXT_TYPE + COMMA_SEP +
                     PokemonsEntry.COLUMN_NAME_LEVELLEARNED + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_ABILITY1 + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_ABILITY2 + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_ABILITY3 + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_HP + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_SPEED + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_SDEFENSE + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_SATTACK + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_DEFENSE + TEXT_TYPE + COMMA_SEP +
+                    PokemonsEntry.COLUMN_NAME_ATTACK + TEXT_TYPE + COMMA_SEP +
                     PokemonsEntry.COLUMN_NAME_ICON + BLOB_TYPE + " )";
 
     public static final String SQL_DELETE_ENTRIES =
@@ -64,6 +73,15 @@ public final class PokemonsContract {
         public static final String COLUMN_NAME_LISTMOVES = "listmoves";
         public static final String COLUMN_NAME_LEARNTYPE = "learntype";
         public static final String COLUMN_NAME_LEVELLEARNED = "levellearned";
+        public static final String COLUMN_NAME_ABILITY1 = "ability1";
+        public static final String COLUMN_NAME_ABILITY2 = "ability2";
+        public static final String COLUMN_NAME_ABILITY3 = "ability3";
+        public static final String COLUMN_NAME_HP = "hp";
+        public static final String COLUMN_NAME_SPEED = "speed";
+        public static final String COLUMN_NAME_SDEFENSE= "specialdefense";
+        public static final String COLUMN_NAME_SATTACK = "specialattack";
+        public static final String COLUMN_NAME_DEFENSE = "defense";
+        public static final String COLUMN_NAME_ATTACK = "attack";
         public static final String COLUMN_NAME_ICON = "icon";
     }
 
@@ -85,6 +103,15 @@ public final class PokemonsContract {
         values.put(PokemonsEntry.COLUMN_NAME_LISTMOVES, Pokemon.getListMoves());
         values.put(PokemonsEntry.COLUMN_NAME_LEARNTYPE, Pokemon.getLearnType());
         values.put(PokemonsEntry.COLUMN_NAME_LEVELLEARNED, Pokemon.getLevelLearned());
+        values.put(PokemonsEntry.COLUMN_NAME_ABILITY1, Pokemon.getAbility1());
+        values.put(PokemonsEntry.COLUMN_NAME_ABILITY2, Pokemon.getAbility2());
+        values.put(PokemonsEntry.COLUMN_NAME_ABILITY3, Pokemon.getAbility3());
+        values.put(PokemonsEntry.COLUMN_NAME_HP, Pokemon.getHp());
+        values.put(PokemonsEntry.COLUMN_NAME_SPEED, Pokemon.getSpeed());
+        values.put(PokemonsEntry.COLUMN_NAME_SDEFENSE, Pokemon.getSdefense());
+        values.put(PokemonsEntry.COLUMN_NAME_SATTACK, Pokemon.getSattack());
+        values.put(PokemonsEntry.COLUMN_NAME_DEFENSE, Pokemon.getDefense());
+        values.put(PokemonsEntry.COLUMN_NAME_ATTACK, Pokemon.getAttack());
         if (Pokemon.getIcon() != null) {
             values.put(PokemonsEntry.COLUMN_NAME_ICON, BitmapConverter.getBytes(Pokemon.getIcon()));
         }
@@ -113,6 +140,15 @@ public final class PokemonsContract {
                 PokemonsEntry.COLUMN_NAME_LISTMOVES,
                 PokemonsEntry.COLUMN_NAME_LEARNTYPE,
                 PokemonsEntry.COLUMN_NAME_LEVELLEARNED,
+                PokemonsEntry.COLUMN_NAME_ABILITY1,
+                PokemonsEntry.COLUMN_NAME_ABILITY2,
+                PokemonsEntry.COLUMN_NAME_ABILITY3,
+                PokemonsEntry.COLUMN_NAME_HP,
+                PokemonsEntry.COLUMN_NAME_SPEED,
+                PokemonsEntry.COLUMN_NAME_SDEFENSE,
+                PokemonsEntry.COLUMN_NAME_SATTACK,
+                PokemonsEntry.COLUMN_NAME_DEFENSE,
+                PokemonsEntry.COLUMN_NAME_ATTACK,
                 PokemonsEntry.COLUMN_NAME_ICON
         };
 
@@ -144,12 +180,18 @@ public final class PokemonsContract {
             pokemon.setListMoves(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_LISTMOVES)));
             pokemon.setLearnType(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_LEARNTYPE)));
             pokemon.setLevelLearned(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_LEVELLEARNED)));
+            pokemon.setAbility1(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ABILITY1)));
+            pokemon.setAbility2(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ABILITY2)));
+            pokemon.setAbility3(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ABILITY3)));
+            pokemon.setHp(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_HP)));
+            pokemon.setSpeed(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_SPEED)));
+            pokemon.setSdefense(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_SDEFENSE)));
+            pokemon.setSattack(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_SATTACK)));
+            pokemon.setDefense(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_DEFENSE)));
+            pokemon.setAttack(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ATTACK)));
             if (cur.getBlob(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)) != null){
                 pokemon.setIcon((BitmapConverter.getImage(cur.getBlob(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)))));
             }
-
-            //pokemon.setUrl(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)));
-            //pokemon.setType(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_TYPE)));
             Pokemons.add(pokemon);
         }
 
@@ -197,6 +239,15 @@ public final class PokemonsContract {
                 PokemonsEntry.COLUMN_NAME_LISTMOVES,
                 PokemonsEntry.COLUMN_NAME_LEARNTYPE,
                 PokemonsEntry.COLUMN_NAME_LEVELLEARNED,
+                PokemonsEntry.COLUMN_NAME_ABILITY1,
+                PokemonsEntry.COLUMN_NAME_ABILITY2,
+                PokemonsEntry.COLUMN_NAME_ABILITY3,
+                PokemonsEntry.COLUMN_NAME_HP,
+                PokemonsEntry.COLUMN_NAME_SPEED,
+                PokemonsEntry.COLUMN_NAME_SDEFENSE,
+                PokemonsEntry.COLUMN_NAME_SATTACK,
+                PokemonsEntry.COLUMN_NAME_DEFENSE,
+                PokemonsEntry.COLUMN_NAME_ATTACK,
                 PokemonsEntry.COLUMN_NAME_ICON
         };
 
@@ -223,6 +274,15 @@ public final class PokemonsContract {
             pokemon.setListMoves(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_LISTMOVES)));
             pokemon.setLearnType(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_LEARNTYPE)));
             pokemon.setLevelLearned(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_LEVELLEARNED)));
+            pokemon.setAbility1(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ABILITY1)));
+            pokemon.setAbility2(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ABILITY2)));
+            pokemon.setAbility3(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ABILITY3)));
+            pokemon.setHp(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_HP)));
+            pokemon.setSpeed(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_SPEED)));
+            pokemon.setSdefense(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_SDEFENSE)));
+            pokemon.setSattack(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_SATTACK)));
+            pokemon.setDefense(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_DEFENSE)));
+            pokemon.setAttack(cur.getString(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ATTACK)));
             if (cur.getBlob(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)) != null){
                 pokemon.setIcon((BitmapConverter.getImage(cur.getBlob(cur.getColumnIndexOrThrow(PokemonsEntry.COLUMN_NAME_ICON)))));
             }

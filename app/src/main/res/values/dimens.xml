@@ -4,6 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="height">100dp</dimen>
     <dimen name="width">100dp</dimen>
-    <dimen name="padding">7dp</dimen>
+    <dimen name="padding">5dp</dimen>
     <dimen name="margin">5dp</dimen>
+    <dimen name="larger_margin">7dp</dimen>
+    <dimen name="margin_left_title">18dp</dimen>
 </resources>

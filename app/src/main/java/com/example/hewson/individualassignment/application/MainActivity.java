@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.example.hewson.individualassignment.controller.PokemonAdapter;
 import com.example.hewson.individualassignment.R;
 import com.example.hewson.individualassignment.database.DBHelper;
@@ -40,37 +41,47 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PokemonAdapter.ClickListener {
-    private RecyclerView mRecyclerView;
+    private static final String TAG = MainActivity.class.getName();
+    public static final String URL = "https://pokeapi.co/api/v2/pokemon/";
+    public static final String ENDPOINT = "?limit=10";
+    private static String listSeparator = "__,__";
+
     private List<Pokemon> pokemonList;
+
+    private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private PokemonAdapter mAdapter;
+
     private DBHelper dbHelper;
     private PokemonAccess pokemonAccess;
     private VolleySingleton volleySingleton;
     private ImageLoader imageLoader;
+
     private Context context;
-    private static final String TAG = MainActivity.class.getName();
     private ProgressBar progressBar;
-    public static final String URL = "https://pokeapi.co/api/v2/pokemon/";
-    public static final String ENDPOINT = "?limit=10";
-    private static String listSeparator = "__,__";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.mytoolbar);
         setSupportActionBar(myToolbar);
 
+        //db
         dbHelper = new DBHelper(this);
         pokemonAccess = new PokemonAccess(dbHelper);
 
+        //recycler view
         pokemonList = new ArrayList<>();
         volleySingleton = VolleySingleton.getInstance();
         imageLoader = volleySingleton.getImageLoader();
@@ -82,8 +93,9 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new PokemonDivider(this, LinearLayoutManager.VERTICAL));
+        //mRecyclerView.addItemDecoration(new PokemonDivider(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
+
         if (pokemonAccess.getAll().isEmpty() && isOnline()) {
             Log.d(TAG, "onCreate: " + "doing json request");
             Toast.makeText(this, "Please wait for the data to be downloaded...", Toast.LENGTH_SHORT).show();
@@ -199,6 +211,49 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                         }
                     }
 
+                    //parsing abilities
+                    JSONArray myAbilities = response.getJSONArray("abilities");
+                    int counterAbilities = 0;
+                    for (int i = 0; i < myAbilities.length(); i++) {
+                        counterAbilities++;
+                        JSONObject abilityNumber = myAbilities.getJSONObject(i);
+                        JSONObject ability = abilityNumber.getJSONObject("ability");
+                        String abilityName = capitaliser(ability.getString("name"));
+                        if (counterAbilities == 1) {
+                            pokemon.setAbility1(abilityName);
+                        } else if (counterAbilities == 2) {
+                            pokemon.setAbility2(abilityName);
+                        } else if (counterAbilities == 3) {
+                            pokemon.setAbility3(abilityName);
+                        } else {
+                        }
+                    }
+
+                    //parsing base stats
+                    JSONArray myStats = response.getJSONArray("stats");
+                    for (int i = 0; i < myStats.length(); i++) {
+                        JSONObject statObject = myStats.getJSONObject(i);
+                        JSONObject statType = statObject.getJSONObject("stat");
+                        String statName = statType.getString("name");
+                        String statLevel = statObject.getString("base_stat");
+                        switch (statName) {
+                            case "speed": pokemon.setSpeed(statLevel);
+                                break;
+                            case "special-defense": pokemon.setSdefense(statLevel);
+                                break;
+                            case "special-attack": pokemon.setSattack(statLevel);
+                                break;
+                            case "defense": pokemon.setDefense(statLevel);
+                                break;
+                            case "attack": pokemon.setAttack(statLevel);
+                                break;
+                            case "hp": pokemon.setHp(statLevel);
+                                break;
+                            default: break;
+                        }
+
+
+                    }
 
                     //parsing moves
                     JSONArray myMoves = response.getJSONArray("moves");
@@ -233,9 +288,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                             pokemon.setIcon(response.getBitmap());
                             if (pokemon.getIcon() != null) {
                                 pokemonAccess.insertPokemon(pokemon);
-                                Log.d(TAG, "getListMoves: " + pokemonAccess.getAll().get(0).getListMoves());
-                                Log.d(TAG, "getLearnType: " + pokemonAccess.getAll().get(0).getLearnType());
-                                Log.d(TAG, "getLevelLearned: " + pokemonAccess.getAll().get(0).getLevelLearned());
+                                Log.d(TAG, "inserting: "+ pokemon.toString());
                                 progressBar.setVisibility(View.GONE);
                             }
                             mAdapter.setPokemon(pokemonAccess.getAll());

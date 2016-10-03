@@ -74,6 +74,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
 
     @Override
     public PokemonAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        //NEED TO CHANGE THIS
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -87,7 +88,6 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Pokemon pokemon = myPokemonList.get(position);
-        //myPokemonList.get(position);
         holder.id.setText(pokemon.getId());
         holder.name.setText(pokemon.getName());
         switch (pokemon.getType1()) {
@@ -153,58 +153,58 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
             holder.type2.setText(pokemon.getType2());
             switch (pokemon.getType2()) {
                 case "Normal":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.normal));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.normal));
                     break;
                 case "Fire":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.fire));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.fire));
                     break;
                 case "Water":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.water));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.water));
                     break;
                 case "Electric":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.electric));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.electric));
                     break;
                 case "Grass":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.grass));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.grass));
                     break;
                 case "Ice":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.normal));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.normal));
                     break;
                 case "Fighting":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.fighting));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.fighting));
                     break;
                 case "Poison":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.poison));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.poison));
                     break;
                 case "Ground":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.ground));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.ground));
                     break;
                 case "Flying":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.flying));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.flying));
                     break;
                 case "Psychic":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.psychic));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.psychic));
                     break;
                 case "Bug":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.bug));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.bug));
                     break;
                 case "Rock":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.rock));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.rock));
                     break;
                 case "Ghost":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.ghost));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.ghost));
                     break;
                 case "Dragon":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.dragon));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.dragon));
                     break;
                 case "Dark":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.dark));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.dark));
                     break;
                 case "Steel":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.steel));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.steel));
                     break;
                 case "Fairy":
-                    holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.fairy));
+                    holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.fairy));
                     break;
                 default:
                     break;

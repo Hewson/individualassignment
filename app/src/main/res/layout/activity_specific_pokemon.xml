@@ -1,90 +1,291 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_specific_pokemon"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/divider"
     tools:context="com.example.hewson.individualassignment.view.SpecificPokemon">
 
-    <include layout="@layout/toolbar"></include>
+    <include
+        android:id="@+id/my_toolbar"
+        layout="@layout/toolbar"></include>
+
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/my_toolbar"
+        android:layout_margin="@dimen/margin">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/my_toolbar"
-                android:padding="@dimen/padding" />
-
-            <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/id"
-                android:padding="@dimen/padding" />
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="@dimen/larger_margin"
+                android:layout_marginLeft="@dimen/margin_left_title"
+                android:layout_marginTop="@dimen/larger_margin"
+                android:textColor="@color/primary_dark"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name"
+                android:layout_marginBottom="@dimen/margin"
+                android:layout_marginLeft="@dimen/larger_margin"
+                android:layout_marginRight="@dimen/margin"
+                card_view:cardElevation="4dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/padding">
+
+                    <TextView
+                        android:id="@+id/id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:id="@+id/typeTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/id"
+                        android:padding="@dimen/padding"
+                        android:text="Type(s): "
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:id="@+id/type1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/id"
+                        android:layout_toRightOf="@+id/typeTag"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:id="@+id/type2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/id"
+                        android:layout_toRightOf="@+id/type1"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:id="@+id/weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/typeTag"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:id="@+id/height"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/weight"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/primary_text" />
+
+                    <ImageView
+                        android:id="@+id/icon"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30dp"
+                        android:textColor="@color/primary_text"></ImageView>
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
 
             <TextView
-                android:id="@+id/type1"
+                android:id="@+id/abilityTag"
                 android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@id/card1"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/larger_margin"
+                android:layout_marginLeft="@dimen/margin_left_title"
+                android:layout_marginTop="@dimen/larger_margin"
+                android:text="Abilities: "
+                android:textColor="@color/primary_dark"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/name"
-                android:padding="@dimen/padding" />
+                android:layout_below="@id/abilityTag"
+                android:layout_margin="@dimen/margin"
+                card_view:cardElevation="4dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/padding">
+
+                    <TextView
+                        android:id="@+id/ability1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:id="@+id/ability2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin"
+                        android:layout_toRightOf="@id/ability1"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:id="@+id/ability3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/margin"
+                        android:layout_toRightOf="@id/ability2"
+                        android:padding="@dimen/padding"
+                        android:textColor="@color/primary_text" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
 
             <TextView
-                android:id="@+id/type2"
+                android:id="@+id/baseStatsTag"
                 android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@id/card2"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/larger_margin"
+                android:layout_marginLeft="@dimen/margin_left_title"
+                android:layout_marginTop="@dimen/larger_margin"
+                android:text="Base Stats: "
+                android:textColor="@color/primary_dark"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card3"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/type1"
-                android:padding="@dimen/padding" />
+                android:layout_below="@id/baseStatsTag"
+                android:layout_margin="@dimen/margin"
+                card_view:cardElevation="4dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/padding">
+
+                    <TextView
+                        android:id="@+id/hp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/margin"
+                        android:textColor="@color/primary_text"
+                        android:padding="@dimen/padding" />
+
+                    <TextView
+                        android:id="@+id/speed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/hp"
+                        android:layout_margin="@dimen/margin"
+                        android:textColor="@color/primary_text"
+                        android:padding="@dimen/padding" />
+
+                    <TextView
+                        android:id="@+id/sdefense"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/speed"
+                        android:layout_margin="@dimen/margin"
+                        android:textColor="@color/primary_text"
+                        android:padding="@dimen/padding" />
+
+                    <TextView
+                        android:id="@+id/sattack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/sdefense"
+                        android:layout_margin="@dimen/margin"
+                        android:textColor="@color/primary_text"
+                        android:padding="@dimen/padding" />
+
+                    <TextView
+                        android:id="@+id/defense"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/sattack"
+                        android:layout_margin="@dimen/margin"
+                        android:textColor="@color/primary_text"
+                        android:padding="@dimen/padding" />
+
+                    <TextView
+                        android:id="@+id/attack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/defense"
+                        android:layout_margin="@dimen/margin"
+                        android:textColor="@color/primary_text"
+                        android:padding="@dimen/padding" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
 
             <TextView
-                android:id="@+id/weight"
+                android:id="@+id/movesTag"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/type2"
-                android:padding="@dimen/padding" />
+                android:layout_height="match_parent"
+                android:layout_below="@id/card3"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/larger_margin"
+                android:layout_marginLeft="@dimen/margin_left_title"
+                android:layout_marginTop="@dimen/larger_margin"
+                android:text="Moves: "
+                android:textColor="@color/primary_dark"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/height"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/weight"
-                android:padding="@dimen/padding" />
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/recycler2"
+                android:layout_height="300dp"
+                android:layout_below="@id/movesTag"
+                android:scrollbars="vertical">
 
-            <TextView
-                android:id="@+id/listMoves"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/height"
-                android:padding="@dimen/padding" />
 
-            <TextView
-                android:id="@+id/learnType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/listMoves"
-                android:padding="@dimen/padding" />
+            </android.support.v7.widget.RecyclerView>
 
-            <TextView
-                android:id="@+id/levelLearned"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/learnType"
-                android:padding="@dimen/padding" />
-
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/my_toolbar" />
         </RelativeLayout>
 
     </ScrollView>

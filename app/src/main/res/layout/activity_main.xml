@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/divider"
     tools:context="com.example.hewson.individualassignment.application.MainActivity">
 
-    <include layout="@layout/toolbar"
-        android:id="@+id/mytoolbar"></include>
+    <include
+        android:id="@+id/mytoolbar"
+        layout="@layout/toolbar"></include>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler1"
@@ -18,11 +20,11 @@
         android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
 
     <ProgressBar
+        android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp"
-        android:id="@+id/progress"/>
+        android:indeterminate="true" />
 </RelativeLayout>
