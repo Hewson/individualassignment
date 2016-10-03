@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
     private static final String TAG = MainActivity.class.getName();
     public static final String URL = "https://pokeapi.co/api/v2/pokemon/";
     public static final String LIMIT = "?limit=";
-    public static final String ENDPOINT = "151";
+    public static final String ENDPOINT = "13";
     public static final String DEFAULT_ICON = "front_default";
     public static final String SHINY_ICON = "front_shiny";
     public static final String BACK_ICON = "back_default";
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
             updateDisplay();
 
         }
-        //if database is not empty: load from database and set a progress bar
+        //if database is not empty: load from database and remove progress bar
         else {
             Log.d(TAG, "onCreate: " + "loading from db");
             Toast.makeText(this, "Retrieving Pokedex from database...", Toast.LENGTH_SHORT).show();
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                 Toast.makeText(this, "Refreshing! Please wait for the data to be downloaded...", Toast.LENGTH_LONG).show();
                 pokemonAccess.deleteAll();
                 requestPokemonName(URL + LIMIT + ENDPOINT, DEFAULT_ICON);
-                updateDisplay();
+                progressBar.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.shiny_refresh:
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                 Toast.makeText(this, "Refreshing! Please wait for the data to be downloaded...", Toast.LENGTH_LONG).show();
                 pokemonAccess.deleteAll();
                 requestPokemonName(URL + LIMIT + ENDPOINT, SHINY_ICON);
-                updateDisplay();
+                progressBar.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.back_refresh:
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                 Toast.makeText(this, "Refreshing! Please wait for the data to be downloaded...", Toast.LENGTH_LONG).show();
                 pokemonAccess.deleteAll();
                 requestPokemonName(URL + LIMIT + ENDPOINT, BACK_ICON);
-                updateDisplay();
+                progressBar.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.default_refresh:
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
                 Toast.makeText(this, "Refreshing! Please wait for the data to be downloaded...", Toast.LENGTH_LONG).show();
                 pokemonAccess.deleteAll();
                 requestPokemonName(URL + LIMIT + ENDPOINT, DEFAULT_ICON);
-                updateDisplay();
+                progressBar.setVisibility(View.VISIBLE);
                 break;
 
             default:
@@ -173,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
 
     //JSON volley request which looks for the list of pokemon and includes a variable called iconType which declares which type of bitmap will be selected from the pokeAPI database
     protected void requestPokemonName(String url, final String iconType) {
+        progressBar.setVisibility(View.VISIBLE);
         //standard JSON request
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -232,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    progressBar.setVisibility(View.VISIBLE);
+
 
                     //parsing and setting height and weight
                     String height = response.getString("height");
