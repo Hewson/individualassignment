@@ -94,11 +94,8 @@ public class MoveAdapter extends RecyclerView.Adapter<MoveAdapter.ViewHolder> {
 
         //sets the move, level and tutor from the arraylists
         holder.move.setText(moveList.get(position));
-        Log.d(TAG, "onBindViewHolder: " + moveList.get(position));
         holder.level.setText(levelList.get(position));
-        Log.d(TAG, "onBindViewHolder: " + levelList.get(position));
         holder.tutor.setText(tutorList.get(position));
-        Log.d(TAG, "onBindViewHolder: " + tutorList.get(position));
     }
 
     //returns the number of viewholders in the recyclerview
