@@ -9,5 +9,6 @@
     android:background="@color/primary"
     android:elevation="4dp"
     android:theme="@style/ActionBarTheme"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    />
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+<!--this XML file declares and sets the toolbar-->

@@ -1,4 +1,5 @@
 <resources>
+    <!--string resources-->
     <string name="app_name">Hewson\'s Pokedex</string>
     <string name="you_re_looking_at_a_pokemon">You\'re looking at a Pokemon</string>
     <string name="loading">Please wait for the Pokedex to load...</string>

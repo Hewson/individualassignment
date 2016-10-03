@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.toolbar.MainActivity">
 
+    <!--this XML file declares the menu bar items-->
+
     <item
         android:id="@+id/action_refresh"
         android:title="@string/refresh"
@@ -19,10 +21,6 @@
 
     <item android:id="@+id/default_refresh"
         android:title="Reset Icons"
-        app:showAsAction="never" />
-
-    <item android:id="@+id/action_settings"
-        android:title="@string/Settings"
         app:showAsAction="never" />
 
 </menu>

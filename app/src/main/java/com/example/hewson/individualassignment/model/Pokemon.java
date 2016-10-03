@@ -6,12 +6,15 @@ import java.util.ArrayList;
 
 /**
  * Created by Hewson Tran on 24/09/2016.
+ * Class is used to create and set Pokemon objects
  */
 
 public class Pokemon {
+    //declaration of variables
     private String id, name, iconUrl, url, type1, type2, weight, height, listMoves, learnType, levelLearned, ability1, ability2, ability3, hp, speed, sdefense, sattack, defense, attack;
     private Bitmap icon;
 
+    //getters and setters
     public String getId() {
         return id;
     }
@@ -181,19 +184,35 @@ public class Pokemon {
     }
 
     public Pokemon() {
-
+        //empty constructor
     }
 
-    public Pokemon(String id, String name, String iconUrl, String url, String type1, String type2, Bitmap icon) {
+    //full constructor
+    public Pokemon(String id, String name, String iconUrl, String url, String type1, String type2, String weight, String height, String listMoves, String learnType, String levelLearned, String ability1, String ability2, String ability3, String hp, String speed, String sdefense, String sattack, String defense, String attack, Bitmap icon) {
         this.id = id;
         this.name = name;
         this.iconUrl = iconUrl;
         this.url = url;
         this.type1 = type1;
         this.type2 = type2;
+        this.weight = weight;
+        this.height = height;
+        this.listMoves = listMoves;
+        this.learnType = learnType;
+        this.levelLearned = levelLearned;
+        this.ability1 = ability1;
+        this.ability2 = ability2;
+        this.ability3 = ability3;
+        this.hp = hp;
+        this.speed = speed;
+        this.sdefense = sdefense;
+        this.sattack = sattack;
+        this.defense = defense;
+        this.attack = attack;
         this.icon = icon;
     }
 
+    //method that prints an arraylist
     public String printArrayList(ArrayList<String> types) {
         String result = "";
         for (int i = 0; i < types.size(); i++) {
@@ -202,6 +221,7 @@ public class Pokemon {
         return result;
     }
 
+    //toString override method for the Pokemon object
     @Override
     public String toString() {
         return "Pokemon{" +

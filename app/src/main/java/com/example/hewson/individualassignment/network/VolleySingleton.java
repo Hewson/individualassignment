@@ -11,17 +11,24 @@ import com.example.hewson.individualassignment.application.MyPokedex;
 
 /**
  * Created by Hewson on 9/28/2016.
+ * Adapted code from Android Developer on how to create a Singleton class
+ * This class exists application wide and allows for queueing of requests through the
+ * Volley method of data transfer
  */
 
 public class VolleySingleton extends Application {
-    private static VolleySingleton sInstance=null;
+    //declaration of variables: imageLoader, requestQueue
+    private static VolleySingleton sInstance = null;
     private ImageLoader mImageLoader;
     private RequestQueue mRequestQueue;
-    private VolleySingleton(){
-        mRequestQueue=Volley.newRequestQueue(MyPokedex.getAppContext());
-        mImageLoader=new ImageLoader(mRequestQueue,new ImageLoader.ImageCache() {
 
-            private LruCache<String, Bitmap> cache=new LruCache<>((int)(Runtime.getRuntime().maxMemory()/1024)/8);
+    //constructor that instantiates a requestQueue and imageLoader with the context as the application wide context
+    private VolleySingleton() {
+        mRequestQueue = Volley.newRequestQueue(MyPokedex.getAppContext());
+        mImageLoader = new ImageLoader(mRequestQueue, new ImageLoader.ImageCache() {
+
+            private LruCache<String, Bitmap> cache = new LruCache<>((int) (Runtime.getRuntime().maxMemory() / 1024) / 8);
+
             @Override
             public Bitmap getBitmap(String url) {
                 return cache.get(url);
@@ -33,17 +40,21 @@ public class VolleySingleton extends Application {
             }
         });
     }
-    public static VolleySingleton getInstance(){
-        if(sInstance==null)
-        {
-            sInstance=new VolleySingleton();
+
+    //method that returns an instance of the volleySingleton object
+    public static VolleySingleton getInstance() {
+        if (sInstance == null) {
+            sInstance = new VolleySingleton();
         }
         return sInstance;
     }
-    public RequestQueue getRequestQueue(){
+
+    //getters for the 2 objects
+    public RequestQueue getRequestQueue() {
         return mRequestQueue;
     }
-    public ImageLoader getImageLoader(){
+
+    public ImageLoader getImageLoader() {
         return mImageLoader;
     }
 }

@@ -3,65 +3,109 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:focusable="true"
     android:minHeight="?android:attr/listPreferredItemHeightSmall">
+
+    <!--this XML defines the recycler view for a specific Pokemon's move list-->
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/larger_margin"
         android:layout_marginBottom="3dp"
-        android:layout_marginLeft="@dimen/larger_margin"
-        android:layout_marginRight="@dimen/larger_margin"
-        android:foreground="?selectableItemBackground"
-        card_view:cardElevation="4dp">
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
+        android:layout_marginTop="@dimen/margin"
+        card_view:cardElevation="2dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/move"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="16dp"
-                android:layout_toRightOf="@+id/id"
-                android:paddingBottom="@dimen/padding"
-                android:paddingLeft="13dp"
-                android:paddingRight="13dp"
-                android:paddingTop="@dimen/padding"
-                android:textColor="@color/primary_text"/>
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="16dp"
-                android:layout_toRightOf="@+id/move"
-                android:paddingBottom="@dimen/padding"
-                android:paddingLeft="13dp"
-                android:paddingRight="13dp"
-                android:paddingTop="@dimen/padding"
-                android:textColor="@color/primary_text"/>
+                <TextView
+                    android:id="@+id/moveTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin"
+                    android:padding="@dimen/padding"
+                    android:layout_alignParentLeft="true"
+                    android:text="Name"
+                    android:textAllCaps="true"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tutor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="16dp"
-                android:layout_toRightOf="@+id/level"
-                android:paddingBottom="@dimen/padding"
-                android:paddingLeft="13dp"
-                android:paddingRight="13dp"
-                android:paddingTop="@dimen/padding"
-                android:textColor="@color/primary_text"/>
+                <TextView
+                    android:id="@+id/move"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/moveTag"
+                    android:layout_marginTop="@dimen/margin"
+                    android:layout_marginBottom="@dimen/margin"
+                    android:paddingTop="@dimen/padding"
+                    android:paddingBottom="@dimen/padding"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text" />
+
+
+                <TextView
+                    android:id="@+id/levelTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/margin"
+                    android:layout_toRightOf="@id/move"
+                    android:padding="@dimen/padding"
+                    android:text="Level"
+                    android:textAllCaps="true"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/levelTag"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margin"
+                    android:layout_marginBottom="@dimen/margin"
+                    android:paddingTop="@dimen/padding"
+                    android:paddingBottom="@dimen/padding"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text" />
+
+
+                <TextView
+                    android:id="@+id/tutorTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/level"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/margin"
+                    android:padding="@dimen/padding"
+                    android:text="Method"
+                    android:textAllCaps="true"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tutor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margin"
+                    android:layout_marginBottom="@dimen/margin"
+                    android:layout_toRightOf="@id/tutorTag"
+                    android:paddingTop="@dimen/padding"
+                    android:paddingBottom="@dimen/padding"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text" />
+
+            </RelativeLayout>
 
 
         </RelativeLayout>

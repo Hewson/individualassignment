@@ -9,56 +9,40 @@ import java.util.List;
 
 /**
  * Created by Hewson Tran on 26/09/2016.
+ * Adapted from code written by Morgan Xu (2016). This method is a class that implements methods written by the PokemonsContract class.
+ * It performs standard CRUD operations by taking in objects or variables
  */
 
 public class PokemonAccess implements DbAccess {
     private final PokemonsContract PokemonsContract;
 
+    //instantiates an SQLiteOpenHelper which is used to manage DB interactions
     public PokemonAccess(SQLiteOpenHelper sqLiteOpenHelper) {
         this.PokemonsContract = new PokemonsContract(sqLiteOpenHelper);
     }
 
-    //Example of overriding interface
+    //overriding methods in the DBACess interface
     @Override
     public List<Pokemon> getAll() {
         return PokemonsContract.getPokemons();
     }
 
-    //Example standard contract methods
-    public void insertPokemon(Pokemon pokemon){
+    //standard CRUD contract methods
+    public void insertPokemon(Pokemon pokemon) {
         PokemonsContract.insert(pokemon);
     }
 
-    public void deletePokemon(int id){
+    public void deletePokemon(int id) {
         PokemonsContract.delete(id);
-    }
-
-    //Example of extra methods
-    public void insertPokemons(List<Pokemon> Pokemons){
-        for(Pokemon pokemon : Pokemons){
-            PokemonsContract.insert(pokemon);
-        }
     }
 
     public void deleteAll() {
         PokemonsContract.restartDB();
     }
 
-    public void deletePokemons(int... ids){
-        for(int id : ids){
+    public void deletePokemons(int... ids) {
+        for (int id : ids) {
             PokemonsContract.delete(id);
         }
-    }
-
-    public String printPokemons(List<Pokemon> pokemons) {
-        String result = "";
-        for (int i = 0; i < pokemons.size(); i++) {
-            result += pokemons.get(i);
-        }
-        return result;
-    }
-
-    public boolean hasPokemon(int id){
-        return PokemonsContract.getPokemon(id) != null;
     }
 }

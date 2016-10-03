@@ -34,7 +34,13 @@ import static com.example.hewson.individualassignment.view.MainActivity.LIMIT;
 import static com.example.hewson.individualassignment.view.MainActivity.SHINY_ICON;
 import static com.example.hewson.individualassignment.view.MainActivity.URL;
 
+/**
+ * Created by Hewson Tran on 26/09/2016.
+ * This class is used to declare and manage the specific pokemon activity
+ */
+
 public class SpecificPokemon extends AppCompatActivity {
+    //standard declaration of variables
     private static final String TAG = SpecificPokemon.class.getName();
     private static String listSeparator = "__,__";
     private List<String> moveList;
@@ -51,6 +57,7 @@ public class SpecificPokemon extends AppCompatActivity {
     private TextView name, idNumber, type1, type2, weight, height, listMoves, learnType, levelLearned, ability1, ability2, ability3, abilityTag, typeTag, hp, speed, sdefense, sattack, defense, attack;
     private ImageView icon;
 
+    //method called when the activity is created
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,16 +67,16 @@ public class SpecificPokemon extends AppCompatActivity {
         Intent intent = getIntent();
         int id = intent.getIntExtra("id", 1);
 
-        //toolbar
+        //toolbar declaration
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        //db
+        //db declaration and get the specific pokemon from the ID passed from the intent
         dbHelper = new DBHelper(this);
         pokemonAccess = new PokemonAccess(dbHelper);
         Pokemon pokemon = pokemonAccess.getAll().get(id);
 
-        //recycler view
+        //recycler view declaration
         moveList = new ArrayList<>();
         volleySingleton = VolleySingleton.getInstance();
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler2);
@@ -80,23 +87,27 @@ public class SpecificPokemon extends AppCompatActivity {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
 
+        //sets the content of the moveList and updates the adapter
         moveList = convertStringToList(pokemon.getListMoves());
         mAdapter.setMoves(moveList);
-        int numPokemon = Integer.parseInt(ENDPOINT);
         updateDisplay();
-//        mAdapter.setMoves(moveList);
 
-
+        //set the value of items from the XML
         name = (TextView) findViewById(R.id.name);
         name.setText(pokemon.getName());
 
+        //set the value of items from the XML
         idNumber = (TextView) findViewById(R.id.id);
         idNumber.setText(pokemon.getId());
 
+        //set the value of items from the XML
         typeTag = (TextView) findViewById(R.id.typeTag);
 
+        //set the value of items from the XML
         type1 = (TextView) findViewById(R.id.type1);
         type1.setText(pokemon.getType1());
+
+        //set the text colour depending on the type
         switch (pokemon.getType1()) {
             case "Normal":
                 type1.setTextColor(ContextCompat.getColor(this, R.color.normal));
@@ -155,12 +166,14 @@ public class SpecificPokemon extends AppCompatActivity {
             default:
                 break;
         }
-        
-        
+
+        //set the value of items from the XML
         type2 = (TextView) findViewById(R.id.type2);
         type2.setVisibility(View.GONE);
         if (pokemon.getType2() != null) {
             type2.setText(pokemon.getType2());
+
+            //set text colour depending on type
             switch (pokemon.getType2()) {
                 case "Normal":
                     type2.setTextColor(ContextCompat.getColor(this, R.color.normal));
@@ -222,17 +235,22 @@ public class SpecificPokemon extends AppCompatActivity {
             type2.setVisibility(View.VISIBLE);
         }
 
+        //set the value of items from the XML
         icon = (ImageView) findViewById(R.id.icon);
         icon.setImageBitmap(pokemon.getIcon());
 
+        //set the value of items from the XML
         weight = (TextView) findViewById(R.id.weight);
         weight.setText(pokemon.getWeight());
 
+        //set the value of items from the XML
         height = (TextView) findViewById(R.id.height);
         height.setText(pokemon.getHeight());
 
+        //set the value of items from the XML
         abilityTag = (TextView) findViewById(R.id.abilityTag);
 
+        //set the value of items from the XML
         ability1 = (TextView) findViewById(R.id.ability1);
         ability1.setVisibility(View.GONE);
         if (pokemon.getAbility1() != null) {
@@ -240,7 +258,7 @@ public class SpecificPokemon extends AppCompatActivity {
             ability1.setVisibility(View.VISIBLE);
         }
 
-
+        //set the value of items from the XML
         ability2 = (TextView) findViewById(R.id.ability2);
         ability2.setVisibility(View.GONE);
         if (pokemon.getAbility2() != null) {
@@ -248,6 +266,7 @@ public class SpecificPokemon extends AppCompatActivity {
             ability2.setVisibility(View.VISIBLE);
         }
 
+        //set the value of items from the XML
         ability3 = (TextView) findViewById(R.id.ability3);
         ability3.setVisibility(View.GONE);
         if (pokemon.getAbility3() != null) {
@@ -255,31 +274,39 @@ public class SpecificPokemon extends AppCompatActivity {
             ability3.setVisibility(View.VISIBLE);
         }
 
+        //set the value of items from the XML
         hp = (TextView) findViewById(R.id.hp);
         hp.setText(pokemon.getHp());
 
+        //set the value of items from the XML
         speed = (TextView) findViewById(R.id.speed);
         speed.setText(pokemon.getSpeed());
 
+        //set the value of items from the XML
         sdefense = (TextView) findViewById(R.id.sdefense);
         sdefense.setText(pokemon.getSdefense());
 
+        //set the value of items from the XML
         sattack = (TextView) findViewById(R.id.sattack);
         sattack.setText(pokemon.getSattack());
 
+        //set the value of items from the XML
         defense = (TextView) findViewById(R.id.defense);
         defense.setText(pokemon.getDefense());
 
+        //set the value of items from the XML
         attack = (TextView) findViewById(R.id.attack);
         attack.setText(pokemon.getAttack());
     }
 
+    //inflates the menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
+    //defines the paths after menu items are selected
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         MainActivity mainActivity = new MainActivity();
@@ -300,10 +327,6 @@ public class SpecificPokemon extends AppCompatActivity {
                 Toast.makeText(this, "Please go back to the main page to refresh", Toast.LENGTH_LONG).show();
                 break;
 
-            case R.id.action_settings:
-                Toast.makeText(this, "You selected Settings", Toast.LENGTH_LONG)
-                        .show();
-                break;
             default:
                 break;
         }
@@ -311,14 +334,14 @@ public class SpecificPokemon extends AppCompatActivity {
         return true;
     }
 
+    //converts strings to an arraylist
     public static ArrayList<String> convertStringToList(String string) {
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(string.split(listSeparator)));
         return list;
     }
 
+    //updates the adapter
     protected void updateDisplay() {
         mAdapter.notifyDataSetChanged();
     }
-
-
 }

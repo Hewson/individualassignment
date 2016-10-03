@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--colours for the theme-->
     <color name="primary">#F44336</color>
     <color name="primary_dark">#D32F2F</color>
     <color name="primary_light">#FFCDD2</color>
@@ -7,8 +8,9 @@
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
-    <color name="divider">#E0E0E0</color>
+    <color name="divider">#e0e0e0</color>
 
+    <!--colours for the Pokemon types-->
     <color name="normal">#a8a878</color>
     <color name="fighting">#82201b</color>
     <color name="flying">#a890f0</color>

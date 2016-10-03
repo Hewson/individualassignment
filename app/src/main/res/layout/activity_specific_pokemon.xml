@@ -6,12 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/divider"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     tools:context="com.example.hewson.individualassignment.view.SpecificPokemon">
+
+    <!--include notation allows other XMLs to be included in layouts-->
 
     <include
         android:id="@+id/my_toolbar"
         layout="@layout/toolbar"></include>
 
+    <!--this XML file defines the layout for the activity called SpecificPokemon. It features nested layouts and cards-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -34,9 +39,9 @@
                 android:layout_marginBottom="@dimen/larger_margin"
                 android:layout_marginLeft="@dimen/margin_left_title"
                 android:layout_marginTop="@dimen/larger_margin"
+                android:focusable="true"
                 android:textColor="@color/primary_dark"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/name"

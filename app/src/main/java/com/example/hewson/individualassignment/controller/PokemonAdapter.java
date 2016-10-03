@@ -28,9 +28,12 @@ import static android.content.ContentValues.TAG;
 
 /**
  * Created by Hewson Tran on 24/09/2016.
+ * This class is the main adapter for the recyclerview in the main activity
+ * It is responsible for handling the data that goes from the database to the recyclerview
  */
 
 public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHolder> {
+    //declaration of variables
     private List<Pokemon> myPokemonList = new ArrayList<>();
     private LayoutInflater inflater;
     private VolleySingleton volleySingleton;
@@ -40,6 +43,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
     private DBHelper dbHelper;
     private PokemonAccess pokemonAccess;
 
+    //constructor for the adapter that instantiates the database, layoutmanager, imageloader, context and Pokemon list
     public PokemonAdapter(Context context, List<Pokemon> dataset) {
         dbHelper = new DBHelper(context);
         pokemonAccess = new PokemonAccess(dbHelper);
@@ -50,6 +54,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         this.context = context;
     }
 
+    //viewholder declaration by declaring the items in the viewholder
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView name, type, id, type1, type2;
         public ImageView thumbnail;
@@ -64,6 +69,7 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
             thumbnail = (ImageView) v.findViewById(R.id.thumbnail);
         }
 
+        //onClick override method that tells the console which viewholder in the recyclerview was clicked
         @Override
         public void onClick(View view) {
             clickListener.itemClicked(view, getAdapterPosition());
@@ -72,24 +78,28 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
         }
     }
 
+    //creates the viewholder and inflates it onto the recyclerview
     @Override
     public PokemonAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //NEED TO CHANGE THIS
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
+    //sets the pokemonlist with the given list and updates the listener that the data has been changed
     public void setPokemon(List<Pokemon> pokemon) {
         this.myPokemonList = pokemon;
         notifyDataSetChanged();
     }
 
+    //method that binds the data to the viewholder from the database
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Pokemon pokemon = myPokemonList.get(position);
         holder.id.setText(pokemon.getId());
         holder.name.setText(pokemon.getName());
+
+        //switch that sets the background colour depending on the type of the pokemon
         switch (pokemon.getType1()) {
             case "Normal":
                 holder.type1.setBackgroundColor(ContextCompat.getColor(context, R.color.normal));
@@ -149,8 +159,12 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
                 break;
         }
         holder.type1.setText(pokemon.getType1());
+
+        //if a second type exists create it and give it a colour
         if (pokemon.getType2() != null) {
             holder.type2.setText(pokemon.getType2());
+
+            //switch that sets the background colour depending on the type of the pokemon
             switch (pokemon.getType2()) {
                 case "Normal":
                     holder.type2.setBackgroundColor(ContextCompat.getColor(context, R.color.normal));
@@ -210,22 +224,25 @@ public class PokemonAdapter extends RecyclerView.Adapter<PokemonAdapter.ViewHold
                     break;
             }
             holder.type2.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             holder.type2.setVisibility(View.GONE);
         }
+        //sets the icon for the pokemon taken from the object as a bitmap
         holder.thumbnail.setImageBitmap(pokemon.getIcon());
     }
 
+    //returns number of viewholders
     @Override
     public int getItemCount() {
         return myPokemonList.size();
     }
 
+    //interface that is used to declare an itemclicked method
     public interface ClickListener {
         public void itemClicked(View v, int position);
     }
 
+    //method that sets a clicklistener object
     public void setClickListener(ClickListener clickListener) {
         this.clickListener = clickListener;
     }

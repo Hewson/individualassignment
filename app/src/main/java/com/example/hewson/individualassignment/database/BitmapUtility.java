@@ -7,11 +7,12 @@ import java.io.ByteArrayOutputStream;
 
 /**
  * Created by Hewson Tran on 2/10/2016.
+ * Utility that does the bitmap conversion between the database BLOB and back to a bitmap
  */
 
-public class BitmapConverter {
+public class BitmapUtility {
 
-    public BitmapConverter() {
+    public BitmapUtility() {
     }
 
     // convert from bitmap to byte array

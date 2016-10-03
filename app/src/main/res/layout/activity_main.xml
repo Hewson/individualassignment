@@ -8,9 +8,13 @@
     android:background="@color/divider"
     tools:context="com.example.hewson.individualassignment.view.MainActivity">
 
+    <!--include notation allows other XMLs to be included in layouts-->
+
     <include
         android:id="@+id/mytoolbar"
         layout="@layout/toolbar"></include>
+
+    <!--this XML file is used for the main activity and declares the recycler view and the progress bar-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler1"
