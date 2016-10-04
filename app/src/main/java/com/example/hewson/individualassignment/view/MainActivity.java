@@ -44,13 +44,15 @@ import java.util.List;
 
 /**
  * Created by Hewson Tran on 28/09/2016.
- * <p>
- * This application utilises the pokeapi.co Pokemon API, recyclerview, cardview, SQLite databasing and volley.
- * It features a recyclerview on the main page for Pokemon and a recyclerview on the detailed page to look at moves.
- * Features logic to determine if DB is empty and will make a JSON call. If it is not, it will load from the DB.
- * Refresh buttons refresh the Pokedex and Pokemon list and also allow the user to switch the type of icons displayed in the Pokedex (shiny, back, front).
- * <p>
+ *
+ * This application utilises the pokeapi.co Pokemon API, recyclerview, cardview, SQLite databasing and volley
+ * It features a recyclerview on the main page for Pokemon and a recyclerview on the detailed page to look at moves
+ * Features logic to determine if DB is empty and will make a JSON call. If it is not, it will load from the DB
+ * Refresh buttons refresh the Pokedex and Pokemon list and also allow the user to switch the type of icons displayed in the Pokedex (shiny, back, front)
+ * A search function is also included which changes the recyclerview on the fly depending on the user's input
+ *
  * This class is used as the main class which creates the main Pokedex activity and performs JSON requests for the data
+ *
  */
 
 public class MainActivity extends AppCompatActivity implements PokemonAdapter.ClickListener {
