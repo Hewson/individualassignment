@@ -311,6 +311,10 @@ public class SpecificPokemon extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         MainActivity mainActivity = new MainActivity();
         switch (item.getItemId()) {
+            case R.id.search_pokemon:
+                Toast.makeText(this, "Please go back to the main page to search", Toast.LENGTH_LONG).show();
+                break;
+
             case R.id.action_refresh:
                 Toast.makeText(this, "Please go back to the main page to refresh", Toast.LENGTH_LONG).show();
                 break;

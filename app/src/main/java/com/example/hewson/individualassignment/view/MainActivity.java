@@ -1,14 +1,17 @@
 package com.example.hewson.individualassignment.view;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -55,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
     private static final String TAG = MainActivity.class.getName();
     public static final String URL = "https://pokeapi.co/api/v2/pokemon/";
     public static final String LIMIT = "?limit=";
-    public static final String ENDPOINT = "13";
+    public static final String ENDPOINT = "151";
     public static final String DEFAULT_ICON = "front_default";
     public static final String SHINY_ICON = "front_shiny";
     public static final String BACK_ICON = "back_default";
@@ -126,6 +129,54 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.search_pokemon);
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search_pokemon).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            //method that submits query
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d(TAG, "onQueryTextSubmit: You typed " + query);
+                return false;
+            }
+
+            //method that searches the recyclerview on the fly
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<Pokemon> oldList = pokemonAccess.getAll();
+                Log.d(TAG, "old list: " + oldList);
+                List<Pokemon> newList = new ArrayList<>();
+                for (int i = 0; i < oldList.size(); i++) {
+                    if (oldList.get(i).getName().toLowerCase().contains(newText.toLowerCase())) {
+                        Log.d(TAG, "handleIntent: " + oldList.get(i).getName());
+                        newList.add(oldList.get(i));
+                    }
+                }
+                mAdapter.setPokemon(newList);
+                Log.d(TAG, "new list: " + newList);
+                updateDisplay();
+                Log.d(TAG, "onQueryTextChange: changing text" + newText);
+                return false;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                Log.d(TAG, "onMenuItemActionCollapse: You closed the search bar!");
+                return true;  // Return true to collapse action view
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // Do something when expanded
+                return true;  // Return true to expand action view
+            }
+        });
         return true;
     }
 
@@ -133,6 +184,9 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.search_pokemon:
+                break;
+
             case R.id.action_refresh:
                 //if refresh item selected: make a JSON request, add it to the database and update the adapter
                 Toast.makeText(this, "Refreshing! Please wait for the data to be downloaded...", Toast.LENGTH_LONG).show();
@@ -439,4 +493,27 @@ public class MainActivity extends AppCompatActivity implements PokemonAdapter.Cl
         stringBuffer.delete(last, last + listSeparator.length() + 1);
         return stringBuffer.toString();
     }
+
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            List<Pokemon> oldList = pokemonAccess.getAll();
+            Log.d(TAG, "old list: " + oldList);
+            List<Pokemon> newList = new ArrayList<>();
+            for (int i = 0; i < oldList.size(); i++) {
+                if (oldList.get(i).getName().contains(query)) {
+                    Log.d(TAG, "handleIntent: " + oldList.get(i).getName());
+                    newList.add(oldList.get(i));
+                }
+            }
+            mAdapter.setPokemon(newList);
+            Log.d(TAG, "new list: " + newList);
+            updateDisplay();
+
+            //use the query to search your data somehow
+        }
+    }
+
+
 }

@@ -6,4 +6,6 @@
     <string name="refresh">refresh</string>
     <string name="settings">settings</string>
     <string name="Settings">Settings</string>
+    <string name="search">search</string>
+    <string name="refresh_new">Refresh</string>
 </resources>
